@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Knimble</string>
+    <string name="tier_small">Small</string>
+    <string name="tier_medium">Medium</string>
+    <string name="tier_large">Big</string>
+    <string name="break_channel_name">Stretch breaks</string>
+    <string name="break_title">Time for a stretch!</string>
+    <string name="break_exercise">%1$s · %2$s</string>
+    <string name="break_no_exercise">Every exercise for this timer is switched off. Open Knimble to choose some.</string>
+</resources>
