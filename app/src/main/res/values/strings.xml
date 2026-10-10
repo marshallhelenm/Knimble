@@ -52,4 +52,6 @@
     <string name="exercises_on_count">%1$d of %2$d on</string>
     <string name="exercise_toggle">Use %1$s in breaks</string>
     <string name="exercise_use_in_breaks">Use in breaks</string>
+    <string name="credits_prefix">Adapted from</string>
+    <string name="safety_note">Go gently. A mild pull is fine; stop if anything hurts.</string>
 </resources>

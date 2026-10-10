@@ -4,6 +4,7 @@ import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import io.github.marshallhelenm.knimble.exercises.BuiltInExercises
+import io.github.marshallhelenm.knimble.model.Credit
 import io.github.marshallhelenm.knimble.model.Exercise
 import io.github.marshallhelenm.knimble.model.ExerciseSource
 import io.github.marshallhelenm.knimble.model.Tier
@@ -80,5 +81,17 @@ class ExerciseDaoTest {
         dao.syncBuiltIn(listOf(seed("keep")))
 
         assertEquals(setOf("keep", "Mine"), dao.getAll().map { it.name }.toSet())
+    }
+
+    @Test
+    fun syncBuiltIn_storesAndUpdatesCredits() = runBlocking {
+        val webMd = Credit("WebMD", "https://www.webmd.com/x")
+        val physio = Credit("Home Physiotherapy Exercises", "https://homephysiotherapyexercises.com/y/")
+        dao.syncBuiltIn(listOf(seed("wrists").copy(credits = listOf(webMd))))
+        assertEquals(listOf(webMd), dao.getAll().single().credits)
+
+        dao.syncBuiltIn(listOf(seed("wrists").copy(credits = listOf(webMd, physio))))
+
+        assertEquals(listOf(webMd, physio), dao.getAll().single().credits)
     }
 }

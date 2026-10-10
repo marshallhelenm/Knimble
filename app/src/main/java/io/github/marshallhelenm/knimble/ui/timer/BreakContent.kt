@@ -23,7 +23,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.marshallhelenm.knimble.R
 import io.github.marshallhelenm.knimble.model.Exercise
+import io.github.marshallhelenm.knimble.ui.components.ExerciseCredits
 import io.github.marshallhelenm.knimble.ui.components.ExerciseImage
+import io.github.marshallhelenm.knimble.ui.components.SafetyNote
 import io.github.marshallhelenm.knimble.ui.components.TagPill
 import io.github.marshallhelenm.knimble.ui.theme.TitleFontFamily
 
@@ -60,6 +62,8 @@ fun BreakContent(
             )
             TagPill(exercise.tag, exercise.tier)
             Text(exercise.description, style = MaterialTheme.typography.bodyLarge)
+            SafetyNote()
+            ExerciseCredits(exercise)
             TextButton(onClick = onPickAnother) { Text(stringResource(R.string.break_pick_another)) }
         }
         Button(onClick = onStartAgain, modifier = Modifier.fillMaxWidth().height(56.dp)) {

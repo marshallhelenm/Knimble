@@ -14,6 +14,9 @@ enum class Tier {
     LARGE
 }
 
+/** Where an exercise's instructions were adapted from. */
+data class Credit(val name: String, val url: String)
+
 enum class ExerciseSource {
     BUILT_IN,
     USER
@@ -37,5 +40,6 @@ data class Exercise(
     // without resetting [enabled]. Null for the user's own exercises.
     val builtInKey: String? = null,
     // Off means it's never picked for a break.
-    val enabled: Boolean = true
+    val enabled: Boolean = true,
+    val credits: List<Credit> = emptyList()
 )

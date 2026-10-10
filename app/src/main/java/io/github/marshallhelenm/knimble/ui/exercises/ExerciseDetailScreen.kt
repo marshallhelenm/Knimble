@@ -22,7 +22,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.marshallhelenm.knimble.R
+import io.github.marshallhelenm.knimble.ui.components.ExerciseCredits
 import io.github.marshallhelenm.knimble.ui.components.ExerciseImage
+import io.github.marshallhelenm.knimble.ui.components.SafetyNote
 import io.github.marshallhelenm.knimble.ui.components.TagPill
 import io.github.marshallhelenm.knimble.ui.components.label
 import io.github.marshallhelenm.knimble.ui.theme.TitleFontFamily
@@ -45,6 +47,8 @@ fun ExerciseDetailScreen(exerciseId: Long, viewModel: ExercisesViewModel, modifi
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Text(current.description, style = MaterialTheme.typography.bodyLarge)
+        SafetyNote()
+        ExerciseCredits(current)
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Text(stringResource(R.string.exercise_use_in_breaks), style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
             Switch(checked = current.enabled, onCheckedChange = { viewModel.setEnabled(current, it) })

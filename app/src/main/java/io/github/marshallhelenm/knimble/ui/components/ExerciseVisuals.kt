@@ -15,6 +15,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.unit.dp
 import io.github.marshallhelenm.knimble.R
@@ -66,5 +74,42 @@ fun TagPill(text: String, tier: Tier, modifier: Modifier = Modifier) {
             .clip(RoundedCornerShape(50))
             .background(tier.color())
             .padding(horizontal = 12.dp, vertical = 4.dp)
+    )
+}
+
+/** "Adapted from …" with each source as a link. Nothing for exercises without credits. */
+@Composable
+fun ExerciseCredits(exercise: Exercise, modifier: Modifier = Modifier) {
+    if (exercise.credits.isEmpty()) return
+    val prefix = stringResource(R.string.credits_prefix)
+    val linkStyle = TextLinkStyles(
+        SpanStyle(color = MaterialTheme.colorScheme.primary, textDecoration = TextDecoration.Underline)
+    )
+    val text = buildAnnotatedString {
+        append(prefix)
+        append(" ")
+        exercise.credits.forEachIndexed { i, credit ->
+            if (i > 0) append(" · ")
+            withLink(LinkAnnotation.Url(credit.url, linkStyle)) { append(credit.name) }
+        }
+    }
+    Text(
+        text,
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        textAlign = TextAlign.Center,
+        modifier = modifier
+    )
+}
+
+/** There's no physician behind these, so every exercise carries the sources' own advice to go gently. */
+@Composable
+fun SafetyNote(modifier: Modifier = Modifier) {
+    Text(
+        stringResource(R.string.safety_note),
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        textAlign = TextAlign.Center,
+        modifier = modifier
     )
 }

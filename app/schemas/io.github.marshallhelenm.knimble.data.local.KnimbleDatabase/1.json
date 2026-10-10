@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "46a2c80779e9ccff838d99596130852a",
+    "identityHash": "24ff8d130cca250d8dfa78484ee19382",
     "entities": [
       {
         "tableName": "exercises",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `tag` TEXT NOT NULL, `description` TEXT NOT NULL, `tier` TEXT NOT NULL, `imageUri` TEXT, `source` TEXT NOT NULL, `builtInKey` TEXT, `enabled` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `tag` TEXT NOT NULL, `description` TEXT NOT NULL, `tier` TEXT NOT NULL, `imageUri` TEXT, `source` TEXT NOT NULL, `builtInKey` TEXT, `enabled` INTEGER NOT NULL, `credits` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -58,6 +58,12 @@
             "fieldPath": "enabled",
             "columnName": "enabled",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "credits",
+            "columnName": "credits",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -139,7 +145,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '46a2c80779e9ccff838d99596130852a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '24ff8d130cca250d8dfa78484ee19382')"
     ]
   }
 }

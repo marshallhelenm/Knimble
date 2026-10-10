@@ -23,4 +23,18 @@ class BuiltInExercisesTest {
             assertTrue(it.key, it.name.isNotBlank() && it.tag.isNotBlank() && it.description.isNotBlank())
         }
     }
+
+    @Test
+    fun everyCreditIsANamedHttpsLink() {
+        BuiltInExercises.all.flatMap { it.credits }.forEach {
+            assertTrue(it.name, it.name.isNotBlank() && it.url.startsWith("https://"))
+        }
+    }
+
+    @Test
+    fun creditsReachTheDatabaseRows() {
+        val credited = BuiltInExercises.all.filter { it.credits.isNotEmpty() }.map { it.key }.toSet()
+        val rows = BuiltInExercises.asExercises().filter { it.credits.isNotEmpty() }.map { it.builtInKey }.toSet()
+        assertEquals(credited, rows)
+    }
 }
