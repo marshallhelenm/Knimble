@@ -11,6 +11,7 @@ Read: 2026-10-10
 | WebMD | [Best Exercises for Carpal Tunnel](https://www.webmd.com/pain-management/carpal-tunnel/best-exercises-carpal-tunnel) |
 | Home Physiotherapy Exercises | [Exercises for Carpal Tunnel Syndrome](https://homephysiotherapyexercises.com/exercises-for-carpal-tunnel-syndrome/) |
 | Wellness52 | [Neck and Shoulder Stretches](https://wellness52.com/neck-and-shoulder-stretches/) |
+| Visual Aids Centre | [Eye Exercises to Improve Vision Fast](https://www.visualaidscentre.com/eye-exercises-to-improve-vision-fast/) |
 | Kaiser Permanente | [Neck Exercises](https://healthy.kaiserpermanente.org/health-wellness/health-encyclopedia/he.neck-exercises.ad1500) |
 
 | Exercise (key) | WebMD | Home Physiotherapy Exercises |
@@ -46,6 +47,20 @@ Read: 2026-10-10
 | Wall shoulder stretch (`wall_shoulder_stretch`) | ✓ (anterior shoulder stretch on wall) | |
 | Behind-the-back hand clasp (`behind_back_hand_clasp`) | ✓ | |
 | Thread the needle (`thread_the_needle`) | ✓ | |
+
+| Exercise (key) | Visual Aids Centre |
+|---|---|
+| Palming (`palming`) | ✓ |
+| Slow blinks (`conscious_blinking`) | ✓ (conscious blinking) |
+| Near and far (`near_far_focus`) | ✓ (near-far focus shifting) |
+| Eye rolls (`eye_rolling`) | ✓ (eye rolling) |
+| Figure-eight tracking (`figure_eight_tracking`) | ✓ |
+| Open eye rotations (`eye_rotations`) | ✓ (as "around the world"; also from a doctor's sheet, below) |
+| 20-20-20 eye break (`eye_break`) | ✓ (the 20-20-20 rule) |
+
+Visual Aids Centre is clear that these ease eye strain and don't change eyesight, so the app doesn't promise
+better vision. Not adapted from it: pencil push-ups (closer to a therapy exercise than a break), and
+"zooming" and "refocusing breaks", which repeat near-far focus and the 20-20-20 rule.
 
 ## From a doctor
 

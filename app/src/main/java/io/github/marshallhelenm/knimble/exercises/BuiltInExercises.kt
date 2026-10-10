@@ -33,6 +33,10 @@ object BuiltInExercises {
     )
     // From the user's own doctor; no public page, and the doctor isn't named.
     private val DOCTORS_SHEET = Credit("a doctor's exercise sheet")
+    private val VISUAL_AIDS = Credit(
+        "Visual Aids Centre",
+        "https://www.visualaidscentre.com/eye-exercises-to-improve-vision-fast/"
+    )
     private val WELLNESS_52 = Credit("Wellness52", "https://wellness52.com/neck-and-shoulder-stretches/")
     private val KAISER = Credit(
         "Kaiser Permanente",
@@ -186,13 +190,13 @@ object BuiltInExercises {
             listOf(WELLNESS_52)
         ),
 
-        // Minor: eye exercises from a doctor's sheet.
+        // Minor: eye exercises from a doctor's sheet and Visual Aids Centre.
         Entry(
             "eye_rotations", Tier.SMALL, "Open eye rotations", "Look to every edge",
             "Sit or stand, steady but relaxed. Keeping your head still, look as far to the right as you comfortably " +
                 "can and hold for a few seconds, letting your eyes ease a little further without straining. Then do " +
                 "the same looking left, up, down, upper right, upper left, lower right and lower left.",
-            listOf(DOCTORS_SHEET)
+            listOf(DOCTORS_SHEET, VISUAL_AIDS)
         ),
         Entry(
             "eye_head_rotations", Tier.SMALL, "Eye-head rotations", "Keep one thing in focus",
@@ -209,12 +213,45 @@ object BuiltInExercises {
             listOf(DOCTORS_SHEET)
         ),
 
-        // Minor (stand-ins: seated).
         Entry(
             "eye_break", Tier.SMALL, "20-20-20 eye break", "Look far away",
             "Look up from your work at something at least 20 feet (6 meters) away, like a window or across the room, " +
-                "for at least 20 seconds. Blink a few times on purpose while you do."
+                "for at least 20 seconds. Blink a few times on purpose while you do.",
+            listOf(VISUAL_AIDS)
         ),
+        Entry(
+            "palming", Tier.SMALL, "Palming", "Warm, dark rest",
+            "Rub your palms together until they feel warm. Close your eyes and cup your palms over them, resting " +
+                "lightly without pressing on your eyes. Breathe slowly for 30–60 seconds.",
+            listOf(VISUAL_AIDS)
+        ),
+        Entry(
+            "conscious_blinking", Tier.SMALL, "Slow blinks", "Close all the way",
+            "Close your eyes fully, pause for 2 seconds, then open them. Do 10 slow, complete blinks. Close work " +
+                "makes us blink less, so this is worth doing often.",
+            listOf(VISUAL_AIDS)
+        ),
+        Entry(
+            "near_far_focus", Tier.SMALL, "Near and far", "Thumb, then the window",
+            "Hold your thumb up about a hand's length (15 cm) from your face and focus on it for 5 seconds. Then " +
+                "focus on something about 20 feet (6 meters) away for 5 seconds. Switch back and forth 10 times. " +
+                "Keep your glasses on if you wear them.",
+            listOf(VISUAL_AIDS)
+        ),
+        Entry(
+            "eye_rolling", Tier.SMALL, "Eye rolls", "Slow, full circles",
+            "Look up, then slowly roll your eyes around in a full circle. Do 5 circles one way, then 5 the other. " +
+                "Keep it slow and smooth.",
+            listOf(VISUAL_AIDS)
+        ),
+        Entry(
+            "figure_eight_tracking", Tier.SMALL, "Figure-eight tracking", "Trace an imaginary eight",
+            "Pick a spot about 10 feet (3 meters) away and imagine a large figure eight lying on its side there. " +
+                "Trace it slowly with your eyes for 30 seconds, then go the other way for 30 seconds.",
+            listOf(VISUAL_AIDS)
+        ),
+
+        // Minor (stand-ins: seated).
         Entry(
             "seated_twist", Tier.SMALL, "Seated twist", "Gentle turn through the spine",
             "Sit tall with both feet flat. Turn your upper body to one side, resting a hand on the back of the chair " +
@@ -422,6 +459,11 @@ object BuiltInExercises {
         "eye_rotations" to setOf(EYES),
         "eye_head_rotations" to setOf(EYES, NECK_SHOULDERS),
         "head_swings" to setOf(EYES, NECK_SHOULDERS),
+        "palming" to setOf(EYES),
+        "conscious_blinking" to setOf(EYES),
+        "near_far_focus" to setOf(EYES),
+        "eye_rolling" to setOf(EYES),
+        "figure_eight_tracking" to setOf(EYES),
 
         "walk_a_lap" to setOf(WHOLE_BODY),
         "downward_dog" to setOf(WHOLE_BODY)
