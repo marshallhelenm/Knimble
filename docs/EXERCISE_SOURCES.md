@@ -47,6 +47,18 @@ Read: 2026-10-10
 | Behind-the-back hand clasp (`behind_back_hand_clasp`) | ✓ | |
 | Thread the needle (`thread_the_needle`) | ✓ | |
 
+## From a doctor
+
+Three eye exercises come from an exercise sheet the user was given by their own doctor. There's no public page
+to link, so the app credits them as "a doctor's exercise sheet" without naming the doctor. The wording stays
+close to the original, with the doctor's holds and directions.
+
+| Exercise (key) | Notes |
+|---|---|
+| Open eye rotations (`eye_rotations`) | "Trying to move the eyes farther" softened to "a little further without straining" |
+| Eye-head rotations (`eye_head_rotations`) | |
+| Head swings (`head_swings`) | |
+
 Not adapted: Wellness52's neck extension release (5–10 minutes lying on a rolled towel, with a caution about
 lightheadedness), which is too long and too cautious a move for a quick break.
 

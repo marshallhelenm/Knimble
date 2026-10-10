@@ -13,7 +13,8 @@ class ConvertersTest {
     fun credits_roundTrip() {
         val credits = listOf(
             Credit("WebMD", "https://www.webmd.com/a?b=c&d=e"),
-            Credit("Home Physiotherapy Exercises", "https://homephysiotherapyexercises.com/x/")
+            Credit("Home Physiotherapy Exercises", "https://homephysiotherapyexercises.com/x/"),
+            Credit("a doctor's exercise sheet")
         )
         assertEquals(credits, converters.stringToCredits(converters.creditsToString(credits)))
     }

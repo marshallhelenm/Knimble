@@ -31,6 +31,8 @@ object BuiltInExercises {
         "Home Physiotherapy Exercises",
         "https://homephysiotherapyexercises.com/exercises-for-carpal-tunnel-syndrome/"
     )
+    // From the user's own doctor; no public page, and the doctor isn't named.
+    private val DOCTORS_SHEET = Credit("a doctor's exercise sheet")
     private val WELLNESS_52 = Credit("Wellness52", "https://wellness52.com/neck-and-shoulder-stretches/")
     private val KAISER = Credit(
         "Kaiser Permanente",
@@ -182,6 +184,29 @@ object BuiltInExercises {
             "Draw your shoulders back, up toward your ears, forward and down, in one slow, smooth circle. " +
                 "Make 10 circles, then 10 the other way.",
             listOf(WELLNESS_52)
+        ),
+
+        // Minor: eye exercises from a doctor's sheet.
+        Entry(
+            "eye_rotations", Tier.SMALL, "Open eye rotations", "Look to every edge",
+            "Sit or stand, steady but relaxed. Keeping your head still, look as far to the right as you comfortably " +
+                "can and hold for a few seconds, letting your eyes ease a little further without straining. Then do " +
+                "the same looking left, up, down, upper right, upper left, lower right and lower left.",
+            listOf(DOCTORS_SHEET)
+        ),
+        Entry(
+            "eye_head_rotations", Tier.SMALL, "Eye-head rotations", "Keep one thing in focus",
+            "Sit or stand relaxed and pick something across the room to look at. Keeping it in focus, slowly move " +
+                "your head in circles, then side to side, then on the diagonals.",
+            listOf(DOCTORS_SHEET)
+        ),
+        Entry(
+            "head_swings", Tier.SMALL, "Head swings", "Look behind you",
+            "Sit or stand with your hands behind your back. Turn your head to the right and try to look behind you. " +
+                "Then look to the upper right and the lower right, holding each for a few seconds and letting your " +
+                "gaze reach a little further. Repeat on the left. Finish by holding your head straight and looking " +
+                "down toward your toes.",
+            listOf(DOCTORS_SHEET)
         ),
 
         // Minor (stand-ins: seated).
@@ -394,6 +419,9 @@ object BuiltInExercises {
         "bodyweight_squats" to setOf(HIPS_LEGS),
 
         "eye_break" to setOf(EYES),
+        "eye_rotations" to setOf(EYES),
+        "eye_head_rotations" to setOf(EYES, NECK_SHOULDERS),
+        "head_swings" to setOf(EYES, NECK_SHOULDERS),
 
         "walk_a_lap" to setOf(WHOLE_BODY),
         "downward_dog" to setOf(WHOLE_BODY)

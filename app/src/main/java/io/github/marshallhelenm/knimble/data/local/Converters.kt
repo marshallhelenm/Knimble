@@ -20,14 +20,16 @@ class Converters {
     fun stringToAreas(value: String): Set<BodyArea> =
         if (value.isEmpty()) emptySet() else value.split(",").map(BodyArea::valueOf).toSet()
 
-    // One credit per line as "name<TAB>url"; neither a name nor a URL contains a tab or newline.
+    // One credit per line as "name<TAB>url", with nothing after the tab when there's no link; neither a name
+    // nor a URL contains a tab or newline.
     @TypeConverter
-    fun creditsToString(credits: List<Credit>): String = credits.joinToString("\n") { "${it.name}\t${it.url}" }
+    fun creditsToString(credits: List<Credit>): String =
+        credits.joinToString("\n") { "${it.name}\t${it.url.orEmpty()}" }
 
     @TypeConverter
     fun stringToCredits(value: String): List<Credit> =
         if (value.isEmpty()) emptyList() else value.lines().map { line ->
             val (name, url) = line.split('\t', limit = 2)
-            Credit(name, url)
+            Credit(name, url.ifEmpty { null })
         }
 }

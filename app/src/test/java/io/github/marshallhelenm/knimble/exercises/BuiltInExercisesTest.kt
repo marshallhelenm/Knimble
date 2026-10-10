@@ -25,9 +25,9 @@ class BuiltInExercisesTest {
     }
 
     @Test
-    fun everyCreditIsANamedHttpsLink() {
+    fun everyCreditIsNamedAndAnyLinkIsHttps() {
         BuiltInExercises.all.flatMap { it.credits }.forEach {
-            assertTrue(it.name, it.name.isNotBlank() && it.url.startsWith("https://"))
+            assertTrue(it.name, it.name.isNotBlank() && (it.url == null || it.url.startsWith("https://")))
         }
     }
 

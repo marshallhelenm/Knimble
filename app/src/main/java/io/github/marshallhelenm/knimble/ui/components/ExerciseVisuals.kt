@@ -2,6 +2,7 @@ package io.github.marshallhelenm.knimble.ui.components
 
 import android.content.res.Resources
 import android.graphics.BitmapFactory
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
@@ -32,24 +33,37 @@ import io.github.marshallhelenm.knimble.model.Tier
 import io.github.marshallhelenm.knimble.ui.theme.Cocoa
 import io.github.marshallhelenm.knimble.ui.theme.color
 
-// The stand-in picture is 2000px square; decoded at full size every row would hold ~16 MB. Each size is
-// decoded once, scaled down, and shared by every exercise using it.
+// The stand-in pictures are up to 2000px square; decoded at full size every row would hold ~16 MB. Each picture is
+// decoded once per size, scaled down, and shared by every exercise using it.
 private object Placeholder {
-    private val cache = mutableMapOf<Int, ImageBitmap>()
+    private val cache = mutableMapOf<Pair<Int, Int>, ImageBitmap>()
 
-    fun get(resources: Resources, sampleSize: Int): ImageBitmap = synchronized(cache) {
-        cache.getOrPut(sampleSize) {
+    fun get(resources: Resources, @DrawableRes res: Int, sampleSize: Int): ImageBitmap = synchronized(cache) {
+        cache.getOrPut(res to sampleSize) {
             val options = BitmapFactory.Options().apply { inSampleSize = sampleSize }
-            BitmapFactory.decodeResource(resources, R.drawable.stretch_placeholder, options).asImageBitmap()
+            BitmapFactory.decodeResource(resources, res, options).asImageBitmap()
         }
     }
+}
+
+// Until exercises have their own pictures, the stand-in is chosen by the body area worked.
+@DrawableRes
+// Eyes comes first: eye exercises that also move the head are still mainly about the eyes.
+private fun placeholderFor(exercise: Exercise): Int = when {
+    BodyArea.EYES in exercise.areas -> R.drawable.eyes_placeholder
+    BodyArea.NECK_SHOULDERS in exercise.areas -> R.drawable.neck_placeholder
+    BodyArea.WHOLE_BODY in exercise.areas -> R.drawable.whole_body_placeholder
+    BodyArea.HIPS_LEGS in exercise.areas -> R.drawable.legs_placeholder
+    BodyArea.BACK in exercise.areas -> R.drawable.back_placeholder
+    else -> R.drawable.stretch_placeholder
 }
 
 /** [large] for the break and detail screens; otherwise a thumbnail-sized decode. */
 @Composable
 fun ExerciseImage(exercise: Exercise, large: Boolean, modifier: Modifier = Modifier) {
     val resources = LocalResources.current
-    val bitmap = remember(large) { Placeholder.get(resources, if (large) 2 else 8) }
+    val res = placeholderFor(exercise)
+    val bitmap = remember(res, large) { Placeholder.get(resources, res, if (large) 2 else 8) }
     Image(
         bitmap = bitmap,
         contentDescription = exercise.name,
@@ -101,7 +115,7 @@ fun TagPill(text: String, tier: Tier, modifier: Modifier = Modifier) {
     )
 }
 
-/** "Adapted from …" with each source as a link. Nothing for exercises without credits. */
+/** "Adapted from …" with each source as a link where it has one. Nothing for exercises without credits. */
 @Composable
 fun ExerciseCredits(exercise: Exercise, modifier: Modifier = Modifier) {
     if (exercise.credits.isEmpty()) return
@@ -114,7 +128,8 @@ fun ExerciseCredits(exercise: Exercise, modifier: Modifier = Modifier) {
         append(" ")
         exercise.credits.forEachIndexed { i, credit ->
             if (i > 0) append(" · ")
-            withLink(LinkAnnotation.Url(credit.url, linkStyle)) { append(credit.name) }
+            val url = credit.url
+            if (url == null) append(credit.name) else withLink(LinkAnnotation.Url(url, linkStyle)) { append(credit.name) }
         }
     }
     Text(

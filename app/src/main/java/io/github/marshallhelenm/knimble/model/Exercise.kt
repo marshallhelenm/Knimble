@@ -24,8 +24,8 @@ enum class BodyArea {
     WHOLE_BODY
 }
 
-/** Where an exercise's instructions were adapted from. */
-data class Credit(val name: String, val url: String)
+/** Where an exercise's instructions were adapted from. [url] is null for sources with no public page. */
+data class Credit(val name: String, val url: String? = null)
 
 enum class ExerciseSource {
     BUILT_IN,
