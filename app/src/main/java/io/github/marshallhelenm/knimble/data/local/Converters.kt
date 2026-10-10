@@ -1,6 +1,7 @@
 package io.github.marshallhelenm.knimble.data.local
 
 import androidx.room.TypeConverter
+import io.github.marshallhelenm.knimble.model.BodyArea
 import io.github.marshallhelenm.knimble.model.Credit
 import io.github.marshallhelenm.knimble.model.Tier
 
@@ -11,6 +12,13 @@ class Converters {
     @TypeConverter
     fun stringToTiers(value: String): Set<Tier> =
         if (value.isEmpty()) emptySet() else value.split(",").map(Tier::valueOf).toSet()
+
+    @TypeConverter
+    fun areasToString(areas: Set<BodyArea>): String = areas.joinToString(",") { it.name }
+
+    @TypeConverter
+    fun stringToAreas(value: String): Set<BodyArea> =
+        if (value.isEmpty()) emptySet() else value.split(",").map(BodyArea::valueOf).toSet()
 
     // One credit per line as "name<TAB>url"; neither a name nor a URL contains a tab or newline.
     @TypeConverter

@@ -1,5 +1,6 @@
 package io.github.marshallhelenm.knimble.data.local
 
+import io.github.marshallhelenm.knimble.model.BodyArea
 import io.github.marshallhelenm.knimble.model.Credit
 import io.github.marshallhelenm.knimble.model.Tier
 import org.junit.Assert.assertEquals
@@ -26,5 +27,12 @@ class ConvertersTest {
     fun tiers_roundTrip() {
         val tiers = setOf(Tier.SMALL, Tier.LARGE)
         assertEquals(tiers, converters.stringToTiers(converters.tiersToString(tiers)))
+    }
+
+    @Test
+    fun areas_roundTrip() {
+        val areas = setOf(BodyArea.NECK_SHOULDERS, BodyArea.BACK)
+        assertEquals(areas, converters.stringToAreas(converters.areasToString(areas)))
+        assertEquals(emptySet<BodyArea>(), converters.stringToAreas(converters.areasToString(emptySet())))
     }
 }

@@ -27,6 +27,7 @@ import io.github.marshallhelenm.knimble.ui.components.ExerciseCredits
 import io.github.marshallhelenm.knimble.ui.components.ExerciseImage
 import io.github.marshallhelenm.knimble.ui.components.SafetyNote
 import io.github.marshallhelenm.knimble.ui.components.TagPill
+import io.github.marshallhelenm.knimble.ui.components.TierAndAreas
 import io.github.marshallhelenm.knimble.ui.theme.TitleFontFamily
 
 @Composable
@@ -61,6 +62,7 @@ fun BreakContent(
                 textAlign = TextAlign.Center
             )
             TagPill(exercise.tag, exercise.tier)
+            TierAndAreas(exercise)
             Text(exercise.description, style = MaterialTheme.typography.bodyLarge)
             SafetyNote()
             ExerciseCredits(exercise)

@@ -48,10 +48,16 @@
     <string name="sound_reset">Use marimba</string>
     <string name="sound_import_failed">Couldn\'t use that file. Pick an audio file.</string>
 
-    <string name="exercises_hint">Switch off any that don\'t work for you; breaks will never pick them.</string>
+    <string name="exercises_hint">Switch off any that don\'t work for you; breaks will never pick them. Tap an area to see only its exercises.</string>
     <string name="exercises_on_count">%1$d of %2$d on</string>
     <string name="exercise_toggle">Use %1$s in breaks</string>
     <string name="exercise_use_in_breaks">Use in breaks</string>
+    <string name="area_hands_wrists">Hands &amp; wrists</string>
+    <string name="area_neck_shoulders">Neck &amp; shoulders</string>
+    <string name="area_back">Back</string>
+    <string name="area_hips_legs">Hips &amp; legs</string>
+    <string name="area_eyes">Eyes</string>
+    <string name="area_whole_body">Whole body</string>
     <string name="credits_prefix">Adapted from</string>
     <string name="safety_note">Go gently. A mild pull is fine; stop if anything hurts.</string>
 </resources>

@@ -37,4 +37,16 @@ class BuiltInExercisesTest {
         val rows = BuiltInExercises.asExercises().filter { it.credits.isNotEmpty() }.map { it.builtInKey }.toSet()
         assertEquals(credited, rows)
     }
+
+    @Test
+    fun everyEntryHasABodyArea() {
+        BuiltInExercises.all.forEach { assertTrue(it.key, BuiltInExercises.areasFor(it.key).isNotEmpty()) }
+    }
+
+    @Test
+    fun areasReachTheDatabaseRows() {
+        BuiltInExercises.asExercises().forEach {
+            assertEquals(it.builtInKey, BuiltInExercises.areasFor(it.builtInKey!!), it.areas)
+        }
+    }
 }

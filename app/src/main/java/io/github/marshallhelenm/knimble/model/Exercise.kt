@@ -14,6 +14,16 @@ enum class Tier {
     LARGE
 }
 
+// Stored by name, so the labels shown to the user (strings.xml) can be renamed freely.
+enum class BodyArea {
+    HANDS_WRISTS,
+    NECK_SHOULDERS,
+    BACK,
+    HIPS_LEGS,
+    EYES,
+    WHOLE_BODY
+}
+
 /** Where an exercise's instructions were adapted from. */
 data class Credit(val name: String, val url: String)
 
@@ -41,5 +51,6 @@ data class Exercise(
     val builtInKey: String? = null,
     // Off means it's never picked for a break.
     val enabled: Boolean = true,
-    val credits: List<Credit> = emptyList()
+    val credits: List<Credit> = emptyList(),
+    val areas: Set<BodyArea> = emptySet()
 )

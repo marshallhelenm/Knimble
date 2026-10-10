@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,8 +14,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -23,12 +27,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.marshallhelenm.knimble.R
+import io.github.marshallhelenm.knimble.model.BodyArea
 import io.github.marshallhelenm.knimble.model.Exercise
 import io.github.marshallhelenm.knimble.model.Tier
 import io.github.marshallhelenm.knimble.ui.components.ExerciseImage
@@ -38,6 +44,7 @@ import io.github.marshallhelenm.knimble.ui.theme.color
 @Composable
 fun ExercisesScreen(viewModel: ExercisesViewModel, onOpen: (Exercise) -> Unit, modifier: Modifier = Modifier) {
     val byTier by viewModel.byTier.collectAsStateWithLifecycle()
+    val areas by viewModel.areas.collectAsStateWithLifecycle()
     LazyColumn(modifier = modifier.fillMaxWidth()) {
         item {
             Text(
@@ -47,6 +54,7 @@ fun ExercisesScreen(viewModel: ExercisesViewModel, onOpen: (Exercise) -> Unit, m
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
         }
+        item { AreaFilter(selected = areas, onToggle = viewModel::toggleArea) }
         byTier.forEach { (tier, exercises) ->
             item(key = tier.name) { TierHeader(tier, on = exercises.count { it.enabled }, total = exercises.size) }
             items(exercises, key = { it.id }) { exercise ->
@@ -54,6 +62,27 @@ fun ExercisesScreen(viewModel: ExercisesViewModel, onOpen: (Exercise) -> Unit, m
             }
         }
         item { Spacer(Modifier.height(16.dp)) }
+    }
+}
+
+@Composable
+private fun AreaFilter(selected: Set<BodyArea>, onToggle: (BodyArea) -> Unit) {
+    LazyRow(
+        contentPadding = PaddingValues(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(BodyArea.entries) { area ->
+            FilterChip(
+                selected = area in selected,
+                onClick = { onToggle(area) },
+                label = { Text(stringResource(area.label())) },
+                leadingIcon = if (area in selected) {
+                    { Icon(painterResource(R.drawable.ic_check), contentDescription = null, modifier = Modifier.size(18.dp)) }
+                } else {
+                    null
+                }
+            )
+        }
     }
 }
 

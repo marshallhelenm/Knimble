@@ -4,6 +4,7 @@ import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import io.github.marshallhelenm.knimble.exercises.BuiltInExercises
+import io.github.marshallhelenm.knimble.model.BodyArea
 import io.github.marshallhelenm.knimble.model.Credit
 import io.github.marshallhelenm.knimble.model.Exercise
 import io.github.marshallhelenm.knimble.model.ExerciseSource
@@ -93,5 +94,15 @@ class ExerciseDaoTest {
         dao.syncBuiltIn(listOf(seed("wrists").copy(credits = listOf(webMd, physio))))
 
         assertEquals(listOf(webMd, physio), dao.getAll().single().credits)
+    }
+
+    @Test
+    fun syncBuiltIn_storesAndUpdatesAreas() = runBlocking {
+        dao.syncBuiltIn(listOf(seed("twist").copy(areas = setOf(BodyArea.BACK))))
+        assertEquals(setOf(BodyArea.BACK), dao.getAll().single().areas)
+
+        dao.syncBuiltIn(listOf(seed("twist").copy(areas = setOf(BodyArea.BACK, BodyArea.NECK_SHOULDERS))))
+
+        assertEquals(setOf(BodyArea.BACK, BodyArea.NECK_SHOULDERS), dao.getAll().single().areas)
     }
 }

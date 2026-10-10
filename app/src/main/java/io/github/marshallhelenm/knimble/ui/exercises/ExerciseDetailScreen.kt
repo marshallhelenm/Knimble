@@ -26,7 +26,7 @@ import io.github.marshallhelenm.knimble.ui.components.ExerciseCredits
 import io.github.marshallhelenm.knimble.ui.components.ExerciseImage
 import io.github.marshallhelenm.knimble.ui.components.SafetyNote
 import io.github.marshallhelenm.knimble.ui.components.TagPill
-import io.github.marshallhelenm.knimble.ui.components.label
+import io.github.marshallhelenm.knimble.ui.components.TierAndAreas
 import io.github.marshallhelenm.knimble.ui.theme.TitleFontFamily
 
 @Composable
@@ -41,11 +41,7 @@ fun ExerciseDetailScreen(exerciseId: Long, viewModel: ExercisesViewModel, modifi
         ExerciseImage(current, large = true, modifier = Modifier.fillMaxWidth(0.8f).aspectRatio(1f))
         Text(current.name, fontFamily = TitleFontFamily, fontSize = 36.sp, lineHeight = 44.sp, textAlign = TextAlign.Center)
         TagPill(current.tag, current.tier)
-        Text(
-            stringResource(current.tier.label()),
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+        TierAndAreas(current)
         Text(current.description, style = MaterialTheme.typography.bodyLarge)
         SafetyNote()
         ExerciseCredits(current)

@@ -1,5 +1,12 @@
 package io.github.marshallhelenm.knimble.exercises
 
+import io.github.marshallhelenm.knimble.model.BodyArea
+import io.github.marshallhelenm.knimble.model.BodyArea.BACK
+import io.github.marshallhelenm.knimble.model.BodyArea.EYES
+import io.github.marshallhelenm.knimble.model.BodyArea.HANDS_WRISTS
+import io.github.marshallhelenm.knimble.model.BodyArea.HIPS_LEGS
+import io.github.marshallhelenm.knimble.model.BodyArea.NECK_SHOULDERS
+import io.github.marshallhelenm.knimble.model.BodyArea.WHOLE_BODY
 import io.github.marshallhelenm.knimble.model.Credit
 import io.github.marshallhelenm.knimble.model.Exercise
 import io.github.marshallhelenm.knimble.model.ExerciseSource
@@ -335,6 +342,65 @@ object BuiltInExercises {
         )
     )
 
+    // Kept apart from the entries so the whole mapping can be read, and changed, in one place.
+    private val AREAS: Map<String, Set<BodyArea>> = mapOf(
+        "wrist_rotations" to setOf(HANDS_WRISTS),
+        "wrist_flexor_stretch" to setOf(HANDS_WRISTS),
+        "wrist_extensor_stretch" to setOf(HANDS_WRISTS),
+        "prayer_stretch" to setOf(HANDS_WRISTS),
+        "tendon_glides" to setOf(HANDS_WRISTS),
+        "median_nerve_glide" to setOf(HANDS_WRISTS),
+        "fist_to_stop_sign" to setOf(HANDS_WRISTS),
+        "finger_spreads" to setOf(HANDS_WRISTS),
+        "thumb_stretch" to setOf(HANDS_WRISTS),
+        "thumb_touches" to setOf(HANDS_WRISTS),
+        "table_wrist_bends" to setOf(HANDS_WRISTS),
+        "wrist_lift" to setOf(HANDS_WRISTS),
+        "hand_squeeze" to setOf(HANDS_WRISTS),
+        "wrist_curls" to setOf(HANDS_WRISTS),
+        "shake_it_out" to setOf(HANDS_WRISTS),
+
+        "neck_side_tilt" to setOf(NECK_SHOULDERS),
+        "diagonal_neck_stretch" to setOf(NECK_SHOULDERS),
+        "chin_to_chest" to setOf(NECK_SHOULDERS),
+        "chin_tucks" to setOf(NECK_SHOULDERS),
+        "neck_presses" to setOf(NECK_SHOULDERS),
+        "shoulder_rolls" to setOf(NECK_SHOULDERS),
+        "behind_back_neck_stretch" to setOf(NECK_SHOULDERS),
+        "crossover_shoulder_stretch" to setOf(NECK_SHOULDERS),
+        "back_scratch_stretch" to setOf(NECK_SHOULDERS),
+        "chest_and_shoulder_stretch" to setOf(NECK_SHOULDERS, BACK),
+        "doorway_chest_stretch" to setOf(NECK_SHOULDERS),
+        "arm_circles" to setOf(NECK_SHOULDERS),
+        "wall_shoulder_stretch" to setOf(NECK_SHOULDERS),
+        "behind_back_hand_clasp" to setOf(NECK_SHOULDERS),
+        "thread_the_needle" to setOf(NECK_SHOULDERS, BACK),
+
+        "seated_twist" to setOf(BACK),
+        "standing_back_bend" to setOf(BACK),
+        "standing_side_bend" to setOf(BACK),
+        "cat_cow" to setOf(BACK),
+        "childs_pose" to setOf(BACK),
+        "knees_to_chest" to setOf(BACK),
+        "lying_twist" to setOf(BACK),
+        "sphinx_pose" to setOf(BACK),
+
+        "calf_raises" to setOf(HIPS_LEGS),
+        "hip_circles" to setOf(HIPS_LEGS),
+        "standing_quad_stretch" to setOf(HIPS_LEGS),
+        "standing_hamstring_stretch" to setOf(HIPS_LEGS),
+        "figure_four" to setOf(HIPS_LEGS),
+        "glute_bridge" to setOf(HIPS_LEGS),
+        "bodyweight_squats" to setOf(HIPS_LEGS),
+
+        "eye_break" to setOf(EYES),
+
+        "walk_a_lap" to setOf(WHOLE_BODY),
+        "downward_dog" to setOf(WHOLE_BODY)
+    )
+
+    fun areasFor(key: String): Set<BodyArea> = AREAS[key].orEmpty()
+
     fun asExercises(): List<Exercise> = all.map {
         Exercise(
             name = it.name,
@@ -343,7 +409,8 @@ object BuiltInExercises {
             tier = it.tier,
             source = ExerciseSource.BUILT_IN,
             builtInKey = it.key,
-            credits = it.credits
+            credits = it.credits,
+            areas = areasFor(it.key)
         )
     }
 }

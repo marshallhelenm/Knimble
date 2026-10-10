@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "24ff8d130cca250d8dfa78484ee19382",
+    "identityHash": "a6320bfa7c0f38838da1a867a16a3a0e",
     "entities": [
       {
         "tableName": "exercises",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `tag` TEXT NOT NULL, `description` TEXT NOT NULL, `tier` TEXT NOT NULL, `imageUri` TEXT, `source` TEXT NOT NULL, `builtInKey` TEXT, `enabled` INTEGER NOT NULL, `credits` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `tag` TEXT NOT NULL, `description` TEXT NOT NULL, `tier` TEXT NOT NULL, `imageUri` TEXT, `source` TEXT NOT NULL, `builtInKey` TEXT, `enabled` INTEGER NOT NULL, `credits` TEXT NOT NULL, `areas` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -63,6 +63,12 @@
           {
             "fieldPath": "credits",
             "columnName": "credits",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "areas",
+            "columnName": "areas",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -145,7 +151,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '24ff8d130cca250d8dfa78484ee19382')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a6320bfa7c0f38838da1a867a16a3a0e')"
     ]
   }
 }

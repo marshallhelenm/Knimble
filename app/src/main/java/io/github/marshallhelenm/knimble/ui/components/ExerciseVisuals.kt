@@ -26,6 +26,7 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.unit.dp
 import io.github.marshallhelenm.knimble.R
+import io.github.marshallhelenm.knimble.model.BodyArea
 import io.github.marshallhelenm.knimble.model.Exercise
 import io.github.marshallhelenm.knimble.model.Tier
 import io.github.marshallhelenm.knimble.ui.theme.Cocoa
@@ -54,6 +55,29 @@ fun ExerciseImage(exercise: Exercise, large: Boolean, modifier: Modifier = Modif
         contentDescription = exercise.name,
         contentScale = ContentScale.Crop,
         modifier = modifier.clip(RoundedCornerShape(if (large) 24.dp else 12.dp))
+    )
+}
+
+fun BodyArea.label(): Int = when (this) {
+    BodyArea.HANDS_WRISTS -> R.string.area_hands_wrists
+    BodyArea.NECK_SHOULDERS -> R.string.area_neck_shoulders
+    BodyArea.BACK -> R.string.area_back
+    BodyArea.HIPS_LEGS -> R.string.area_hips_legs
+    BodyArea.EYES -> R.string.area_eyes
+    BodyArea.WHOLE_BODY -> R.string.area_whole_body
+}
+
+/** The tier and body areas, e.g. "Minor · Hands & wrists". */
+@Composable
+fun TierAndAreas(exercise: Exercise, modifier: Modifier = Modifier) {
+    val parts = listOf(stringResource(exercise.tier.label())) +
+        exercise.areas.sortedBy { it.ordinal }.map { stringResource(it.label()) }
+    Text(
+        parts.joinToString(" · "),
+        style = MaterialTheme.typography.labelLarge,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        textAlign = TextAlign.Center,
+        modifier = modifier
     )
 }
 
