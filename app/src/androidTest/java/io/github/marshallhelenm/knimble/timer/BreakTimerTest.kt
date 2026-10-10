@@ -188,4 +188,69 @@ class BreakTimerTest {
         assertEquals(45, state.durationMinutes)
         assertEquals(setOf(Tier.MEDIUM, Tier.LARGE), state.tiers)
     }
+
+    @Test
+    fun timerEnds_putsTheUserOnABreakThatOutlastsTheRinging() = runBlocking {
+        timer.start(25, setOf(Tier.SMALL))
+        clock.advanceMinutes(25)
+        timer.onAlarm()
+        timer.stopRinging()
+
+        assertTrue(timer.current().onBreak)
+    }
+
+    @Test
+    fun pickAnother_swapsForADifferentExerciseInTheSameTiers() = runBlocking {
+        timer.start(25, setOf(Tier.SMALL))
+        clock.advanceMinutes(25)
+        val first = timer.onAlarm()!!.exercise!!.id
+
+        timer.pickAnother()
+
+        val state = timer.current()
+        assertNotEquals(first, state.breakExerciseId)
+        assertTrue(state.breakExerciseId in smallIds)
+        assertEquals(state.breakExerciseId, state.lastExerciseId)
+    }
+
+    @Test
+    fun pickAnother_onlyOneChoice_keepsIt() = runBlocking {
+        timer.start(25, setOf(Tier.LARGE))
+        clock.advanceMinutes(25)
+        timer.onAlarm()
+
+        timer.pickAnother()
+
+        assertEquals(largeId, timer.current().breakExerciseId)
+    }
+
+    @Test
+    fun finishBreak_endsTheBreakAndAnyRinging() = runBlocking {
+        timer.start(25, setOf(Tier.SMALL))
+        clock.advanceMinutes(25)
+        val exerciseId = timer.onAlarm()!!.exercise!!.id
+
+        timer.finishBreak()
+
+        val state = timer.current()
+        assertFalse(state.onBreak)
+        assertFalse(state.ringing)
+        assertNull(state.breakExerciseId)
+        assertEquals(exerciseId, state.lastExerciseId)
+        assertNull(alarms.armedAt)
+    }
+
+    @Test
+    fun start_duringABreak_endsIt() = runBlocking {
+        timer.start(25, setOf(Tier.SMALL))
+        clock.advanceMinutes(25)
+        timer.onAlarm()
+
+        timer.start(25, setOf(Tier.SMALL))
+
+        val state = timer.current()
+        assertFalse(state.onBreak)
+        assertFalse(state.ringing)
+        assertNull(state.breakExerciseId)
+    }
 }

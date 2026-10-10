@@ -33,7 +33,7 @@ class BreakTimer(
         states.save(
             current().copy(
                 endsAt = endsAt, durationMinutes = durationMinutes, tiers = tiers,
-                ringing = false, breakExerciseId = null
+                onBreak = false, ringing = false, breakExerciseId = null
             )
         )
         alarms.schedule(endsAt)
@@ -57,7 +57,7 @@ class BreakTimer(
             state.endsAt != null && now >= state.endsAt -> {
                 val picked = ExercisePicker.pick(exercises.getAll(), state.tiers, state.lastExerciseId, random)
                 state.copy(
-                    endsAt = null, ringing = true, breakExerciseId = picked?.id,
+                    endsAt = null, onBreak = true, ringing = true, breakExerciseId = picked?.id,
                     lastExerciseId = picked?.id ?: state.lastExerciseId
                 )
             }
@@ -66,16 +66,31 @@ class BreakTimer(
                 return null
             }
         }
-        states.save(ringing)
+        // Armed before saving: an open app reacts to the save by stopping the ringing, and its cancel must come last.
         alarms.schedule(now + REPEAT_MILLIS)
+        states.save(ringing)
         return BreakAlert(ringing.breakExerciseId?.let { exercises.getById(it) })
     }
 
-    /** The user has seen the break, so the repeats stop. The break's exercise stays until the next timer starts. */
+    /** The user has seen the break, so the repeats stop. The break and its exercise stay until it is finished. */
     suspend fun stopRinging() {
         val state = current()
         if (!state.ringing) return
         states.save(state.copy(ringing = false))
+        alarms.cancel()
+    }
+
+    /** Swaps the break's exercise for another from the same tiers, if there is another. */
+    suspend fun pickAnother() {
+        val state = current()
+        if (!state.onBreak) return
+        val picked = ExercisePicker.pick(exercises.getAll(), state.tiers, state.breakExerciseId, random) ?: return
+        states.save(state.copy(breakExerciseId = picked.id, lastExerciseId = picked.id))
+    }
+
+    /** Ends the break without starting another timer. */
+    suspend fun finishBreak() {
+        states.save(current().copy(onBreak = false, ringing = false, breakExerciseId = null))
         alarms.cancel()
     }
 

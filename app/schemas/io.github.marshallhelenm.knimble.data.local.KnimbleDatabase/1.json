@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "8178ce7e424e823f1334e6d94bbe9442",
+    "identityHash": "46a2c80779e9ccff838d99596130852a",
     "entities": [
       {
         "tableName": "exercises",
@@ -81,7 +81,7 @@
       },
       {
         "tableName": "timer_state",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `endsAt` INTEGER, `durationMinutes` INTEGER NOT NULL, `tiers` TEXT NOT NULL, `ringing` INTEGER NOT NULL, `breakExerciseId` INTEGER, `lastExerciseId` INTEGER, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `endsAt` INTEGER, `durationMinutes` INTEGER NOT NULL, `tiers` TEXT NOT NULL, `onBreak` INTEGER NOT NULL, `ringing` INTEGER NOT NULL, `breakExerciseId` INTEGER, `lastExerciseId` INTEGER, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -104,6 +104,12 @@
             "fieldPath": "tiers",
             "columnName": "tiers",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onBreak",
+            "columnName": "onBreak",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -133,7 +139,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8178ce7e424e823f1334e6d94bbe9442')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '46a2c80779e9ccff838d99596130852a')"
     ]
   }
 }

@@ -17,6 +17,9 @@ interface ExerciseDao {
     suspend fun getAll(): List<Exercise>
 
     @Query("SELECT * FROM exercises WHERE id = :id")
+    fun observeById(id: Long): Flow<Exercise?>
+
+    @Query("SELECT * FROM exercises WHERE id = :id")
     suspend fun getById(id: Long): Exercise?
 
     @Query("UPDATE exercises SET enabled = :enabled WHERE id = :id")

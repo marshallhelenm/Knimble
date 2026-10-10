@@ -13,9 +13,11 @@ data class TimerState(
     // Remembered so the next timer starts with the same settings.
     val durationMinutes: Int = 30,
     val tiers: Set<Tier> = Tier.entries.toSet(),
-    // True from the moment the timer ends until the user opens the break; the alert repeats every minute meanwhile.
+    // True from the moment the timer ends until the user finishes the break or starts another timer.
+    val onBreak: Boolean = false,
+    // True from the moment the timer ends until the user sees the break; the alert repeats every minute meanwhile.
     val ringing: Boolean = false,
-    // The exercise for the current break; null once the break is over, or if every exercise in its tiers is off.
+    // The exercise for the current break; null when not on a break, or if every exercise in its tiers is off.
     val breakExerciseId: Long? = null,
     // Kept after the break ends so the next break picks something different.
     val lastExerciseId: Long? = null

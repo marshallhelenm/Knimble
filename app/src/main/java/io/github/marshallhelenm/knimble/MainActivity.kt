@@ -1,31 +1,32 @@
 package io.github.marshallhelenm.knimble
 
 import android.Manifest
+import android.app.AlarmManager
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.core.app.AlarmManagerCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
-import io.github.marshallhelenm.knimble.notifications.BreakNotifier
-import io.github.marshallhelenm.knimble.timer.BreakTimer
+import androidx.core.net.toUri
+import io.github.marshallhelenm.knimble.ui.KnimbleApp
 import io.github.marshallhelenm.knimble.ui.theme.KnimbleTheme
-import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     private val requestNotifications =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
+
+    // Re-read on every resume: the grant happens on a system settings screen outside the app.
+    // Only ever false on Android 12, since USE_EXACT_ALARM covers 13 and up.
+    private var canScheduleExact by mutableStateOf(true)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,21 +38,31 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             KnimbleTheme {
-                Surface(modifier = Modifier.fillMaxSize()) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Text(stringResource(R.string.app_name), style = MaterialTheme.typography.headlineLarge)
-                    }
-                }
+                KnimbleApp(canScheduleExact = canScheduleExact, onAllowExact = ::openExactAlarmSettings)
+                // CODE TO BE DELETED
+                // Surface(modifier = Modifier.fillMaxSize()) {
+                //     Box(contentAlignment = Alignment.Center) {
+                //         Text(stringResource(R.string.app_name), style = MaterialTheme.typography.headlineLarge)
+                //     }
+                // }
             }
         }
     }
 
-    // Opening the app counts as seeing the break, so the repeats stop.
     override fun onResume() {
         super.onResume()
-        lifecycleScope.launch {
-            BreakTimer.from(applicationContext).stopRinging()
-            BreakNotifier(applicationContext).cancel()
+        canScheduleExact = AlarmManagerCompat.canScheduleExactAlarms(getSystemService(AlarmManager::class.java))
+        // CODE TO BE DELETED
+        // Ringing now stops when KnimbleApp shows the break, which also covers the app already being open.
+        // lifecycleScope.launch {
+        //     BreakTimer.from(applicationContext).stopRinging()
+        //     BreakNotifier(applicationContext).cancel()
+        // }
+    }
+
+    private fun openExactAlarmSettings() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, "package:$packageName".toUri()))
         }
     }
 }

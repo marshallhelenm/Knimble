@@ -29,7 +29,14 @@ private val LightColors = lightColorScheme(
     surface = Cream,
     onSurface = Cocoa,
     surfaceVariant = Oat,
-    onSurfaceVariant = Color(0xFF5E514A)
+    onSurfaceVariant = Color(0xFF5E514A),
+    // Material's defaults for these are cool lavenders; warm them to match the cream.
+    surfaceContainerLowest = Color.White,
+    surfaceContainerLow = Color(0xFFFCF3E7),
+    surfaceContainer = Oat,
+    surfaceContainerHigh = Color(0xFFF0E4D4),
+    surfaceContainerHighest = Color(0xFFEADDCB),
+    outlineVariant = Color(0xFFDCCFC2)
 )
 
 private val DarkColors = darkColorScheme(
@@ -52,7 +59,13 @@ private val DarkColors = darkColorScheme(
     surface = Bark,
     onSurface = Oat,
     surfaceVariant = Walnut,
-    onSurfaceVariant = Color(0xFFD6C6BA)
+    onSurfaceVariant = Color(0xFFD6C6BA),
+    surfaceContainerLowest = Color(0xFF1D1715),
+    surfaceContainerLow = Color(0xFF2C2420),
+    surfaceContainer = Walnut,
+    surfaceContainerHigh = Color(0xFF3D322D),
+    surfaceContainerHighest = Color(0xFF483B35),
+    outlineVariant = Color(0xFF5A4C45)
 )
 
 /** Each tier wears its own stripe of the rainbow. */

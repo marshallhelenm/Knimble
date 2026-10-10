@@ -3,8 +3,53 @@
     <string name="tier_small">Small</string>
     <string name="tier_medium">Medium</string>
     <string name="tier_large">Big</string>
+    <string name="tier_small_hint">Stay in your seat</string>
+    <string name="tier_medium_hint">Stand up for a minute</string>
+    <string name="tier_large_hint">Floor or full body</string>
     <string name="break_channel_name">Stretch breaks</string>
     <string name="break_title">Time for a stretch!</string>
     <string name="break_exercise">%1$s · %2$s</string>
     <string name="break_no_exercise">Every exercise for this timer is switched off. Open Knimble to choose some.</string>
+
+    <string name="tab_timer">Timer</string>
+    <string name="tab_exercises">Exercises</string>
+    <string name="title_break">Stretch break</string>
+    <string name="title_exercise">Exercise</string>
+    <string name="back">Back</string>
+
+    <string name="setup_how_long">How long until your break?</string>
+    <string name="setup_shorter">5 minutes shorter</string>
+    <string name="setup_longer">5 minutes longer</string>
+    <string name="minutes">%d min</string>
+    <string name="minutes_short">%d</string>
+    <string name="setup_which_stretches">Which stretches?</string>
+    <string name="setup_no_tiers">Pick at least one</string>
+    <string name="start">Start crafting</string>
+    <string name="exact_alarm_explanation">Your break may arrive a few minutes late until Knimble is allowed to set exact alarms.</string>
+    <string name="exact_alarm_button">Allow exact timing</string>
+
+    <string name="running_ends_at">Break at %1$s</string>
+    <string name="running_tiers">Stretches: %1$s</string>
+    <string name="running_remaining">%1$s until your break</string>
+    <string name="cancel_timer">Cancel timer</string>
+
+    <string name="break_nothing_on">Every exercise for this timer is switched off.</string>
+    <string name="break_choose_exercises">Choose exercises</string>
+    <string name="break_pick_another">Show me a different one</string>
+    <string name="break_start_again">Back to crafting</string>
+    <string name="break_done">Done for now</string>
+
+    <string name="sound_title">Alert sound</string>
+    <string name="sound_bundled">Marimba (built in)</string>
+    <string name="sound_untitled">Your sound</string>
+    <string name="sound_play">Play</string>
+    <string name="sound_phone">Phone sounds</string>
+    <string name="sound_file">From a file</string>
+    <string name="sound_reset">Use marimba</string>
+    <string name="sound_import_failed">Couldn\'t use that file. Pick an audio file.</string>
+
+    <string name="exercises_hint">Switch off any that don\'t work for you; breaks will never pick them.</string>
+    <string name="exercises_on_count">%1$d of %2$d on</string>
+    <string name="exercise_toggle">Use %1$s in breaks</string>
+    <string name="exercise_use_in_breaks">Use in breaks</string>
 </resources>
