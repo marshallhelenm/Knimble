@@ -6,11 +6,11 @@ import androidx.room.PrimaryKey
 
 // Stored by name, so the labels shown to the user (strings.xml) can be renamed freely.
 enum class Tier {
-    // Can be done sitting at the craft: hands, wrists, neck, eyes.
+    // "Minor": small stretches that don't require moving much, like wrist bends or head tilts.
     SMALL,
-    // Needs standing up, but not the floor.
+    // "Balanced": stretches with slightly more movement, like seated twists.
     MEDIUM,
-    // Floor work or full-body movement.
+    // "Involved": exercises that need getting out of your seat and moving around.
     LARGE
 }
 

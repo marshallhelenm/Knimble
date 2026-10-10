@@ -4,12 +4,14 @@ import io.github.marshallhelenm.knimble.model.Exercise
 import io.github.marshallhelenm.knimble.model.ExerciseSource
 import io.github.marshallhelenm.knimble.model.Tier
 
+// Stand-in content until the real exercises are written; it predates the current tier definitions, so some
+// entries sit in a different tier than they would now.
 // Keys are permanent: they tie each entry to its database row, so renaming one would reset its on/off switch.
 object BuiltInExercises {
     data class Entry(val key: String, val tier: Tier, val name: String, val tag: String, val description: String)
 
     val all: List<Entry> = listOf(
-        // Small: stay in your seat.
+        // Minor (stand-ins: seated).
         Entry(
             "wrist_extensor_stretch", Tier.SMALL, "Wrist extensor stretch", "Backs of the forearms",
             "Hold one arm out in front, palm down. With the other hand, gently bend the hand down at the wrist " +
@@ -62,7 +64,7 @@ object BuiltInExercises {
                 "or your opposite knee. Hold for 15–20 seconds, breathing slowly, then turn to the other side."
         ),
 
-        // Medium: stand up, no floor.
+        // Balanced (stand-ins: standing, no floor).
         Entry(
             "doorway_chest_stretch", Tier.MEDIUM, "Doorway chest stretch", "Open up the front",
             "Stand in a doorway with your forearms on the frame, elbows at about shoulder height. " +
@@ -112,7 +114,7 @@ object BuiltInExercises {
             "Get up and walk around your home for a couple of minutes. Fetch a glass of water while you're at it."
         ),
 
-        // Large: get on the floor or move the whole body.
+        // Involved (stand-ins: floor or whole body).
         Entry(
             "cat_cow", Tier.LARGE, "Cat-cow", "Move the whole spine",
             "On hands and knees, breathe in as you drop your belly and lift your head and tailbone. " +

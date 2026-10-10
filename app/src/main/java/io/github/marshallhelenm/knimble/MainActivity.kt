@@ -39,12 +39,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             KnimbleTheme {
                 KnimbleApp(canScheduleExact = canScheduleExact, onAllowExact = ::openExactAlarmSettings)
-                // CODE TO BE DELETED
-                // Surface(modifier = Modifier.fillMaxSize()) {
-                //     Box(contentAlignment = Alignment.Center) {
-                //         Text(stringResource(R.string.app_name), style = MaterialTheme.typography.headlineLarge)
-                //     }
-                // }
             }
         }
     }
@@ -52,12 +46,6 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         canScheduleExact = AlarmManagerCompat.canScheduleExactAlarms(getSystemService(AlarmManager::class.java))
-        // CODE TO BE DELETED
-        // Ringing now stops when KnimbleApp shows the break, which also covers the app already being open.
-        // lifecycleScope.launch {
-        //     BreakTimer.from(applicationContext).stopRinging()
-        //     BreakNotifier(applicationContext).cancel()
-        // }
     }
 
     private fun openExactAlarmSettings() {
