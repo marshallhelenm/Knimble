@@ -45,6 +45,7 @@ import io.github.marshallhelenm.knimble.ui.theme.color
 fun ExercisesScreen(viewModel: ExercisesViewModel, onOpen: (Exercise) -> Unit, modifier: Modifier = Modifier) {
     val byTier by viewModel.byTier.collectAsStateWithLifecycle()
     val areas by viewModel.areas.collectAsStateWithLifecycle()
+    val availableAreas by viewModel.availableAreas.collectAsStateWithLifecycle()
     LazyColumn(modifier = modifier.fillMaxWidth()) {
         item {
             Text(
@@ -54,7 +55,7 @@ fun ExercisesScreen(viewModel: ExercisesViewModel, onOpen: (Exercise) -> Unit, m
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
         }
-        item { AreaFilter(selected = areas, onToggle = viewModel::toggleArea) }
+        item { AreaFilter(available = availableAreas, selected = areas, onToggle = viewModel::toggleArea) }
         byTier.forEach { (tier, exercises) ->
             item(key = tier.name) { TierHeader(tier, on = exercises.count { it.enabled }, total = exercises.size) }
             items(exercises, key = { it.id }) { exercise ->
@@ -66,12 +67,12 @@ fun ExercisesScreen(viewModel: ExercisesViewModel, onOpen: (Exercise) -> Unit, m
 }
 
 @Composable
-private fun AreaFilter(selected: Set<BodyArea>, onToggle: (BodyArea) -> Unit) {
+private fun AreaFilter(available: List<BodyArea>, selected: Set<BodyArea>, onToggle: (BodyArea) -> Unit) {
     LazyRow(
         contentPadding = PaddingValues(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(BodyArea.entries) { area ->
+        items(available) { area ->
             FilterChip(
                 selected = area in selected,
                 onClick = { onToggle(area) },

@@ -49,4 +49,13 @@ class ExerciseFilterTest {
     fun areaWithNoExercises_isEmpty() {
         assertEquals(emptyMap<Tier, List<Long>>(), ids(ExerciseFilter.byTier(all, setOf(BodyArea.EYES))))
     }
+
+    @Test
+    fun areasIn_listsOnlyAreasWithExercises_inDisplayOrder() {
+        assertEquals(
+            listOf(BodyArea.HANDS_WRISTS, BodyArea.NECK_SHOULDERS, BodyArea.BACK, BodyArea.HIPS_LEGS),
+            ExerciseFilter.areasIn(all)
+        )
+        assertEquals(listOf(BodyArea.HANDS_WRISTS), ExerciseFilter.areasIn(listOf(wrists)))
+    }
 }

@@ -15,4 +15,8 @@ object ExerciseFilter {
             .associateWith { tier -> shown.filter { it.tier == tier } }
             .filter { (_, inTier) -> areas.isEmpty() || inTier.isNotEmpty() }
     }
+
+    /** The areas at least one of [exercises] works, in display order; there's no point offering an empty filter. */
+    fun areasIn(exercises: List<Exercise>): List<BodyArea> =
+        BodyArea.entries.filter { area -> exercises.any { area in it.areas } }
 }

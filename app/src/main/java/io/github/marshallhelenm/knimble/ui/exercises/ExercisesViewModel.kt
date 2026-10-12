@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -25,6 +26,10 @@ class ExercisesViewModel(application: Application) : AndroidViewModel(applicatio
 
     /** The body areas the list is narrowed to; empty shows everything. */
     val areas: StateFlow<Set<BodyArea>> = _areas.asStateFlow()
+
+    val availableAreas: StateFlow<List<BodyArea>> = exercises.observeAll()
+        .map(ExerciseFilter::areasIn)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     /** Alphabetical within each tier, tiers smallest first. */
     val byTier: StateFlow<Map<Tier, List<Exercise>>> = combine(exercises.observeAll(), _areas, ExerciseFilter::byTier)

@@ -13,9 +13,7 @@ import io.github.marshallhelenm.knimble.model.ExerciseSource
 import io.github.marshallhelenm.knimble.model.Tier
 
 // Keys are permanent: they tie each entry to its database row, so renaming one would reset its on/off switch.
-// Credited entries are adapted, in our own words, from the pages in docs/EXERCISE_SOURCES.md. Uncredited ones
-// are stand-ins until the real exercises are written; they predate the current tier definitions, so some sit
-// in a different tier than they would now.
+// Every entry is credited: adapted, in our own words, from the sources in docs/EXERCISE_SOURCES.md.
 object BuiltInExercises {
     data class Entry(
         val key: String,
@@ -251,12 +249,12 @@ object BuiltInExercises {
             listOf(VISUAL_AIDS)
         ),
 
-        // Minor (stand-ins: seated).
-        Entry(
-            "seated_twist", Tier.SMALL, "Seated twist", "Gentle turn through the spine",
-            "Sit tall with both feet flat. Turn your upper body to one side, resting a hand on the back of the chair " +
-                "or your opposite knee. Hold for 15–20 seconds, breathing slowly, then turn to the other side."
-        ),
+        // CODE TO BE DELETED: stand-ins removed before the first release (seated).
+        // Entry(
+        //     "seated_twist", Tier.SMALL, "Seated twist", "Gentle turn through the spine",
+        //     "Sit tall with both feet flat. Turn your upper body to one side, resting a hand on the back of the chair " +
+        //         "or your opposite knee. Hold for 15–20 seconds, breathing slowly, then turn to the other side."
+        // ),
 
         // Balanced: sourced shoulder and upper-back stretches.
         Entry(
@@ -288,50 +286,50 @@ object BuiltInExercises {
             listOf(KAISER)
         ),
 
-        // Balanced (stand-ins: standing, no floor).
-        Entry(
-            "doorway_chest_stretch", Tier.MEDIUM, "Doorway chest stretch", "Open up the front",
-            "Stand in a doorway with your forearms on the frame, elbows at about shoulder height. " +
-                "Step one foot forward until you feel a stretch across your chest. Hold for 20–30 seconds."
-        ),
-        Entry(
-            "standing_back_bend", Tier.MEDIUM, "Standing back bend", "Reverse the lean",
-            "Stand with feet hip-width apart and your hands on your lower back. Gently lean back, " +
-                "lifting your chest toward the ceiling, only as far as is comfortable. Hold for a few seconds. Repeat 5 times."
-        ),
-        Entry(
-            "standing_side_bend", Tier.MEDIUM, "Standing side bend", "Lengthen your sides",
-            "Stand tall and reach one arm overhead. Lean gently to the opposite side until you feel a stretch " +
-                "along your side. Hold for 15–20 seconds, then switch."
-        ),
-        Entry(
-            "calf_raises", Tier.MEDIUM, "Calf raises", "Wake up your legs",
-            "Stand behind a chair or near a wall for balance. Rise up onto your toes, pause, then lower slowly. Repeat 15 times."
-        ),
-        Entry(
-            "hip_circles", Tier.MEDIUM, "Hip circles", "Loosen stiff hips",
-            "Stand with feet hip-width apart and hands on your hips. Make slow, wide circles with your hips, " +
-                "10 in one direction and 10 in the other."
-        ),
-        Entry(
-            "standing_quad_stretch", Tier.MEDIUM, "Standing quad stretch", "Fronts of the thighs",
-            "Hold onto a chair or wall. Bend one knee and bring that heel toward your seat, holding the ankle " +
-                "(or your sock or trouser leg) with your hand. Keep the knees close together. Hold for 20–30 seconds, then switch."
-        ),
-        Entry(
-            "standing_hamstring_stretch", Tier.MEDIUM, "Standing hamstring stretch", "Backs of the legs",
-            "Put one heel on a low step or stool with the leg straight. Keeping your back long, hinge forward " +
-                "at the hips until you feel a stretch behind the thigh. Hold for 20–30 seconds, then switch."
-        ),
-        Entry(
-            "arm_circles", Tier.MEDIUM, "Arm circles", "Get the blood moving",
-            "Stand with arms out to the sides at shoulder height. Make small circles, gradually getting bigger, " +
-                "for about 15 seconds. Then reverse direction."
-        ),
-        Entry(
-            "walk_a_lap", Tier.MEDIUM, "Walk a lap", "Just move",
-            "Get up and walk around your home for a couple of minutes. Fetch a glass of water while you're at it."
-        ),
+        // CODE TO BE DELETED: stand-ins removed before the first release (standing, no floor).
+        // Entry(
+        //     "doorway_chest_stretch", Tier.MEDIUM, "Doorway chest stretch", "Open up the front",
+        //     "Stand in a doorway with your forearms on the frame, elbows at about shoulder height. " +
+        //         "Step one foot forward until you feel a stretch across your chest. Hold for 20–30 seconds."
+        // ),
+        // Entry(
+        //     "standing_back_bend", Tier.MEDIUM, "Standing back bend", "Reverse the lean",
+        //     "Stand with feet hip-width apart and your hands on your lower back. Gently lean back, " +
+        //         "lifting your chest toward the ceiling, only as far as is comfortable. Hold for a few seconds. Repeat 5 times."
+        // ),
+        // Entry(
+        //     "standing_side_bend", Tier.MEDIUM, "Standing side bend", "Lengthen your sides",
+        //     "Stand tall and reach one arm overhead. Lean gently to the opposite side until you feel a stretch " +
+        //         "along your side. Hold for 15–20 seconds, then switch."
+        // ),
+        // Entry(
+        //     "calf_raises", Tier.MEDIUM, "Calf raises", "Wake up your legs",
+        //     "Stand behind a chair or near a wall for balance. Rise up onto your toes, pause, then lower slowly. Repeat 15 times."
+        // ),
+        // Entry(
+        //     "hip_circles", Tier.MEDIUM, "Hip circles", "Loosen stiff hips",
+        //     "Stand with feet hip-width apart and hands on your hips. Make slow, wide circles with your hips, " +
+        //         "10 in one direction and 10 in the other."
+        // ),
+        // Entry(
+        //     "standing_quad_stretch", Tier.MEDIUM, "Standing quad stretch", "Fronts of the thighs",
+        //     "Hold onto a chair or wall. Bend one knee and bring that heel toward your seat, holding the ankle " +
+        //         "(or your sock or trouser leg) with your hand. Keep the knees close together. Hold for 20–30 seconds, then switch."
+        // ),
+        // Entry(
+        //     "standing_hamstring_stretch", Tier.MEDIUM, "Standing hamstring stretch", "Backs of the legs",
+        //     "Put one heel on a low step or stool with the leg straight. Keeping your back long, hinge forward " +
+        //         "at the hips until you feel a stretch behind the thigh. Hold for 20–30 seconds, then switch."
+        // ),
+        // Entry(
+        //     "arm_circles", Tier.MEDIUM, "Arm circles", "Get the blood moving",
+        //     "Stand with arms out to the sides at shoulder height. Make small circles, gradually getting bigger, " +
+        //         "for about 15 seconds. Then reverse direction."
+        // ),
+        // Entry(
+        //     "walk_a_lap", Tier.MEDIUM, "Walk a lap", "Just move",
+        //     "Get up and walk around your home for a couple of minutes. Fetch a glass of water while you're at it."
+        // ),
 
         // Involved: sourced.
         Entry(
@@ -356,52 +354,52 @@ object BuiltInExercises {
             listOf(WELLNESS_52)
         ),
 
-        // Involved (stand-ins: floor or whole body).
-        Entry(
-            "cat_cow", Tier.LARGE, "Cat-cow", "Move the whole spine",
-            "On hands and knees, breathe in as you drop your belly and lift your head and tailbone. " +
-                "Breathe out as you round your back toward the ceiling and tuck your chin. Flow between the two 10 times."
-        ),
-        Entry(
-            "childs_pose", Tier.LARGE, "Child's pose", "Rest and lengthen",
-            "Kneel, bring your big toes together and your knees apart, then sit back toward your heels " +
-                "and walk your hands forward until your forehead rests on the floor. Breathe slowly for 30–60 seconds."
-        ),
-        Entry(
-            "downward_dog", Tier.LARGE, "Downward dog", "Full-body stretch",
-            "From hands and knees, tuck your toes and lift your hips up and back into an upside-down V. " +
-                "Keep a soft bend in the knees if you need to. Hold for 5 slow breaths."
-        ),
-        Entry(
-            "knees_to_chest", Tier.LARGE, "Knees to chest", "Ease the lower back",
-            "Lie on your back and hug both knees toward your chest. Rock gently side to side if that feels good. " +
-                "Hold for 30 seconds."
-        ),
-        Entry(
-            "lying_twist", Tier.LARGE, "Lying twist", "Release through the spine",
-            "Lie on your back with your knees bent and arms out to the sides. Let both knees fall to one side " +
-                "while your shoulders stay down. Hold for 20–30 seconds, then switch sides."
-        ),
-        Entry(
-            "figure_four", Tier.LARGE, "Figure four", "Hips and glutes",
-            "Lie on your back with knees bent. Cross one ankle over the opposite knee, then pull that bottom thigh " +
-                "toward your chest until you feel a stretch in the hip. Hold for 20–30 seconds, then switch."
-        ),
-        Entry(
-            "glute_bridge", Tier.LARGE, "Glute bridge", "Wake up the back of the body",
-            "Lie on your back with knees bent and feet flat. Press through your heels to lift your hips until " +
-                "your body makes a straight line from shoulders to knees. Pause, then lower slowly. Repeat 10 times."
-        ),
-        Entry(
-            "sphinx_pose", Tier.LARGE, "Sphinx pose", "Gentle backbend",
-            "Lie on your front and prop yourself up on your forearms, elbows under your shoulders. " +
-                "Let your lower back relax and your chest lift. Hold for 30–60 seconds."
-        ),
-        Entry(
-            "bodyweight_squats", Tier.LARGE, "Squats", "Get the heart going",
-            "Stand with feet shoulder-width apart. Sit your hips back and down as if into a chair, keeping your chest up, " +
-                "then stand back up. Use a chair behind you as a target if you like. Repeat 10 times."
-        )
+        // CODE TO BE DELETED: stand-ins removed before the first release (floor or whole body).
+        // Entry(
+        //     "cat_cow", Tier.LARGE, "Cat-cow", "Move the whole spine",
+        //     "On hands and knees, breathe in as you drop your belly and lift your head and tailbone. " +
+        //         "Breathe out as you round your back toward the ceiling and tuck your chin. Flow between the two 10 times."
+        // ),
+        // Entry(
+        //     "childs_pose", Tier.LARGE, "Child's pose", "Rest and lengthen",
+        //     "Kneel, bring your big toes together and your knees apart, then sit back toward your heels " +
+        //         "and walk your hands forward until your forehead rests on the floor. Breathe slowly for 30–60 seconds."
+        // ),
+        // Entry(
+        //     "downward_dog", Tier.LARGE, "Downward dog", "Full-body stretch",
+        //     "From hands and knees, tuck your toes and lift your hips up and back into an upside-down V. " +
+        //         "Keep a soft bend in the knees if you need to. Hold for 5 slow breaths."
+        // ),
+        // Entry(
+        //     "knees_to_chest", Tier.LARGE, "Knees to chest", "Ease the lower back",
+        //     "Lie on your back and hug both knees toward your chest. Rock gently side to side if that feels good. " +
+        //         "Hold for 30 seconds."
+        // ),
+        // Entry(
+        //     "lying_twist", Tier.LARGE, "Lying twist", "Release through the spine",
+        //     "Lie on your back with your knees bent and arms out to the sides. Let both knees fall to one side " +
+        //         "while your shoulders stay down. Hold for 20–30 seconds, then switch sides."
+        // ),
+        // Entry(
+        //     "figure_four", Tier.LARGE, "Figure four", "Hips and glutes",
+        //     "Lie on your back with knees bent. Cross one ankle over the opposite knee, then pull that bottom thigh " +
+        //         "toward your chest until you feel a stretch in the hip. Hold for 20–30 seconds, then switch."
+        // ),
+        // Entry(
+        //     "glute_bridge", Tier.LARGE, "Glute bridge", "Wake up the back of the body",
+        //     "Lie on your back with knees bent and feet flat. Press through your heels to lift your hips until " +
+        //         "your body makes a straight line from shoulders to knees. Pause, then lower slowly. Repeat 10 times."
+        // ),
+        // Entry(
+        //     "sphinx_pose", Tier.LARGE, "Sphinx pose", "Gentle backbend",
+        //     "Lie on your front and prop yourself up on your forearms, elbows under your shoulders. " +
+        //         "Let your lower back relax and your chest lift. Hold for 30–60 seconds."
+        // ),
+        // Entry(
+        //     "bodyweight_squats", Tier.LARGE, "Squats", "Get the heart going",
+        //     "Stand with feet shoulder-width apart. Sit your hips back and down as if into a chair, keeping your chest up, " +
+        //         "then stand back up. Use a chair behind you as a target if you like. Repeat 10 times."
+        // )
     )
 
     // Kept apart from the entries so the whole mapping can be read, and changed, in one place.
@@ -432,28 +430,28 @@ object BuiltInExercises {
         "crossover_shoulder_stretch" to setOf(NECK_SHOULDERS),
         "back_scratch_stretch" to setOf(NECK_SHOULDERS),
         "chest_and_shoulder_stretch" to setOf(NECK_SHOULDERS, BACK),
-        "doorway_chest_stretch" to setOf(NECK_SHOULDERS),
-        "arm_circles" to setOf(NECK_SHOULDERS),
+        // CODE TO BE DELETED: "doorway_chest_stretch" to setOf(NECK_SHOULDERS),
+        // CODE TO BE DELETED: "arm_circles" to setOf(NECK_SHOULDERS),
         "wall_shoulder_stretch" to setOf(NECK_SHOULDERS),
         "behind_back_hand_clasp" to setOf(NECK_SHOULDERS),
         "thread_the_needle" to setOf(NECK_SHOULDERS, BACK),
 
-        "seated_twist" to setOf(BACK),
-        "standing_back_bend" to setOf(BACK),
-        "standing_side_bend" to setOf(BACK),
-        "cat_cow" to setOf(BACK),
-        "childs_pose" to setOf(BACK),
-        "knees_to_chest" to setOf(BACK),
-        "lying_twist" to setOf(BACK),
-        "sphinx_pose" to setOf(BACK),
+        // CODE TO BE DELETED: "seated_twist" to setOf(BACK),
+        // CODE TO BE DELETED: "standing_back_bend" to setOf(BACK),
+        // CODE TO BE DELETED: "standing_side_bend" to setOf(BACK),
+        // CODE TO BE DELETED: "cat_cow" to setOf(BACK),
+        // CODE TO BE DELETED: "childs_pose" to setOf(BACK),
+        // CODE TO BE DELETED: "knees_to_chest" to setOf(BACK),
+        // CODE TO BE DELETED: "lying_twist" to setOf(BACK),
+        // CODE TO BE DELETED: "sphinx_pose" to setOf(BACK),
 
-        "calf_raises" to setOf(HIPS_LEGS),
-        "hip_circles" to setOf(HIPS_LEGS),
-        "standing_quad_stretch" to setOf(HIPS_LEGS),
-        "standing_hamstring_stretch" to setOf(HIPS_LEGS),
-        "figure_four" to setOf(HIPS_LEGS),
-        "glute_bridge" to setOf(HIPS_LEGS),
-        "bodyweight_squats" to setOf(HIPS_LEGS),
+        // CODE TO BE DELETED: "calf_raises" to setOf(HIPS_LEGS),
+        // CODE TO BE DELETED: "hip_circles" to setOf(HIPS_LEGS),
+        // CODE TO BE DELETED: "standing_quad_stretch" to setOf(HIPS_LEGS),
+        // CODE TO BE DELETED: "standing_hamstring_stretch" to setOf(HIPS_LEGS),
+        // CODE TO BE DELETED: "figure_four" to setOf(HIPS_LEGS),
+        // CODE TO BE DELETED: "glute_bridge" to setOf(HIPS_LEGS),
+        // CODE TO BE DELETED: "bodyweight_squats" to setOf(HIPS_LEGS),
 
         "eye_break" to setOf(EYES),
         "eye_rotations" to setOf(EYES),
@@ -465,8 +463,8 @@ object BuiltInExercises {
         "eye_rolling" to setOf(EYES),
         "figure_eight_tracking" to setOf(EYES),
 
-        "walk_a_lap" to setOf(WHOLE_BODY),
-        "downward_dog" to setOf(WHOLE_BODY)
+        // CODE TO BE DELETED: "walk_a_lap" to setOf(WHOLE_BODY),
+        // CODE TO BE DELETED: "downward_dog" to setOf(WHOLE_BODY),
     )
 
     fun areasFor(key: String): Set<BodyArea> = AREAS[key].orEmpty()
