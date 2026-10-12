@@ -35,4 +35,4 @@ from public health sites and a doctor's exercise sheet. Go gently, and stop if a
 - Exercise sources: [docs/EXERCISE_SOURCES.md](docs/EXERCISE_SOURCES.md)
 - Sounds: [docs/SOUND_CREDITS.md](docs/SOUND_CREDITS.md)
 - Title font: MoMo Signature, SIL Open Font License ([docs/fonts](docs/fonts))
-- Pictures are placeholders for now.
+- Pictures (placeholders for now): [docs/IMAGE_CREDITS.md](docs/IMAGE_CREDITS.md)
