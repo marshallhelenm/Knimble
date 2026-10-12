@@ -27,8 +27,11 @@ enum class BodyArea {
 /** Where an exercise's instructions were adapted from. [url] is null for sources with no public page. */
 data class Credit(val name: String, val url: String? = null)
 
+// Who wrote the content you see. Stored by name, so adding a value needs no schema change.
 enum class ExerciseSource {
     BUILT_IN,
+    // A built-in the user has changed: the startup sync leaves its content alone.
+    EDITED,
     USER
 }
 

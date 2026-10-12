@@ -105,4 +105,33 @@ class ExerciseDaoTest {
 
         assertEquals(setOf(BodyArea.BACK, BodyArea.NECK_SHOULDERS), dao.getAll().single().areas)
     }
+
+    @Test
+    fun syncBuiltIn_leavesEditedRowsAlone() = runBlocking {
+        dao.syncBuiltIn(listOf(seed("neck", name = "Neck tilt")))
+        val row = dao.getAll().single()
+        dao.update(row.copy(name = "My neck stretch", source = ExerciseSource.EDITED, enabled = false))
+
+        dao.syncBuiltIn(listOf(seed("neck", name = "Neck side tilt", tier = Tier.MEDIUM)))
+
+        val after = dao.getAll().single()
+        assertEquals("My neck stretch", after.name)
+        assertEquals(Tier.SMALL, after.tier)
+        assertEquals(ExerciseSource.EDITED, after.source)
+        assertFalse(after.enabled)
+    }
+
+    @Test
+    fun syncBuiltIn_editedRowNoLongerShipped_becomesTheUsersOwn() = runBlocking {
+        dao.syncBuiltIn(listOf(seed("keep"), seed("edited"), seed("untouched")))
+        val edited = dao.getAll().single { it.builtInKey == "edited" }
+        dao.update(edited.copy(name = "Mine now", source = ExerciseSource.EDITED))
+
+        dao.syncBuiltIn(listOf(seed("keep")))
+
+        val rows = dao.getAll().associateBy { it.name }
+        assertEquals(setOf("keep", "Mine now"), rows.keys)
+        assertEquals(ExerciseSource.USER, rows.getValue("Mine now").source)
+        assertEquals(null, rows.getValue("Mine now").builtInKey)
+    }
 }
