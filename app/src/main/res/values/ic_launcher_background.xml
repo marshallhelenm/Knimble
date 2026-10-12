@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The purple behind the sticker in the logo artwork; art/build_icons.py uses the same value. -->
+    <color name="ic_launcher_background">#BD95C5</color>
+</resources>
