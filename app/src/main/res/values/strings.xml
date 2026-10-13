@@ -66,10 +66,12 @@
     <string name="add_exercise">Add exercise</string>
     <string name="edit_exercise">Edit exercise</string>
     <string name="new_exercise">New exercise</string>
-    <string name="edit_photo">Exercise photo</string>
-    <string name="edit_choose_photo">Choose photo</string>
-    <string name="edit_remove_photo">Remove photo</string>
+    <string name="edit_add_photos">Add photos</string>
+    <string name="edit_remove_photo">Remove photo %1$d</string>
     <string name="edit_photo_hint">Without a photo, it uses the picture for its body area.</string>
+    <string name="edit_photos_hint">Up to 5. The first one shows in the list.</string>
+    <string name="edit_photos_full">That\'s the 5-photo limit.</string>
+    <string name="photo_of">Photo %1$d of %2$d: %3$s</string>
     <string name="edit_photo_failed">Couldn\'t use that photo. Try another one.</string>
     <string name="edit_name">Name</string>
     <string name="edit_name_missing">Give it a name</string>

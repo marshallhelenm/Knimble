@@ -16,7 +16,6 @@ import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -47,7 +46,7 @@ class ExerciseLibraryTest {
 
     @After
     fun tearDown() = runBlocking {
-        dao.getAll().forEach { photos.delete(it.imageUri) }
+        dao.getAll().flatMap { it.photos }.forEach { photos.delete(it) }
         db.close()
     }
 
@@ -132,74 +131,100 @@ class ExerciseLibraryTest {
         assertEquals("Shrugs", dao.getById(id)!!.name)
     }
 
-    @Test
-    fun add_withPhoto_storesACopy() = runBlocking {
-        val id = library.add(mine("Shrugs"), PhotoChange.Replace(picked("a.jpg")))!!
+    private fun picks(vararg names: String) = names.map { PhotoDraft.Picked(picked(it)) }
 
-        assertTrue(exists(dao.getById(id)!!.imageUri))
+    private val notAnImage get() = PhotoDraft.Picked(Uri.fromFile(File(context.cacheDir, "notes.txt").apply { writeText("hello") }))
+
+    private fun storedFiles() = photos.fileFor(Uri.fromFile(File(context.filesDir, "exercise_photos/x.jpg")).toString())!!
+        .parentFile!!.listFiles().orEmpty().map { it.name }.toSet()
+
+    @Test
+    fun add_withPhotos_storesCopiesInOrder() = runBlocking {
+        val id = library.add(mine("Shrugs"), picks("a.jpg", "b.jpg", "c.jpg"))!!
+
+        val stored = dao.getById(id)!!.photos
+        assertEquals(3, stored.size)
+        assertTrue(stored.all(::exists))
     }
 
     @Test
-    fun add_unreadablePhoto_addsNothing() = runBlocking {
-        val notAnImage = Uri.fromFile(File(context.cacheDir, "notes.txt").apply { writeText("hello") })
+    fun add_keepsAtMostFivePhotos() = runBlocking {
+        val id = library.add(mine("Shrugs"), picks("1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg"))!!
 
-        assertNull(library.add(mine("Shrugs"), PhotoChange.Replace(notAnImage)))
+        assertEquals(5, dao.getById(id)!!.photos.size)
+    }
+
+    @Test
+    fun add_oneUnreadablePhoto_addsNothingAndLeavesNoFiles() = runBlocking {
+        val before = storedFiles()
+
+        assertNull(library.add(mine("Shrugs"), picks("a.jpg") + notAnImage))
+
         assertEquals(1, dao.getAll().size)
+        assertEquals(before, storedFiles())
     }
 
     @Test
-    fun save_replacingThePhoto_deletesTheOldCopy() = runBlocking {
-        val id = library.add(mine("Shrugs"), PhotoChange.Replace(picked("a.jpg")))!!
-        val first = dao.getById(id)!!.imageUri
+    fun save_removingOnePhoto_deletesOnlyThatFile() = runBlocking {
+        val id = library.add(mine("Shrugs"), picks("a.jpg", "b.jpg"))!!
+        val (first, second) = dao.getById(id)!!.photos
 
-        assertTrue(library.save(dao.getById(id)!!, PhotoChange.Replace(picked("b.jpg"))))
+        assertTrue(library.save(dao.getById(id)!!, listOf(PhotoDraft.Stored(second))))
 
-        val second = dao.getById(id)!!.imageUri
-        assertTrue(exists(second))
+        assertEquals(listOf(second), dao.getById(id)!!.photos)
         assertFalse(exists(first))
+        assertTrue(exists(second))
     }
 
     @Test
-    fun save_keep_leavesThePhoto_andRemove_deletesIt() = runBlocking {
-        val id = library.add(mine("Shrugs"), PhotoChange.Replace(picked("a.jpg")))!!
-        val stored = dao.getById(id)!!.imageUri
+    fun save_addingToExistingPhotos_keepsThemAndAppends() = runBlocking {
+        val id = library.add(mine("Shrugs"), picks("a.jpg"))!!
+        val first = dao.getById(id)!!.photos.single()
+
+        library.save(dao.getById(id)!!, listOf(PhotoDraft.Stored(first)) + picks("b.jpg"))
+
+        val stored = dao.getById(id)!!.photos
+        assertEquals(2, stored.size)
+        assertEquals(first, stored.first())
+        assertTrue(stored.all(::exists))
+    }
+
+    @Test
+    fun save_withoutAPhotoList_keepsThePhotos() = runBlocking {
+        val id = library.add(mine("Shrugs"), picks("a.jpg"))!!
+        val stored = dao.getById(id)!!.photos
 
         library.save(dao.getById(id)!!.copy(name = "Big shrugs"))
-        assertEquals(stored, dao.getById(id)!!.imageUri)
 
-        library.save(dao.getById(id)!!, PhotoChange.Remove)
-        assertNull(dao.getById(id)!!.imageUri)
-        assertFalse(exists(stored))
+        assertEquals(stored, dao.getById(id)!!.photos)
     }
 
     @Test
     fun save_unreadablePhoto_savesNothing() = runBlocking {
-        val notAnImage = Uri.fromFile(File(context.cacheDir, "notes.txt").apply { writeText("hello") })
-
-        assertFalse(library.save(builtIn().copy(name = "Changed"), PhotoChange.Replace(notAnImage)))
+        assertFalse(library.save(builtIn().copy(name = "Changed"), listOf(notAnImage)))
         assertEquals("Neck side tilt", builtIn().name)
         assertEquals(ExerciseSource.BUILT_IN, builtIn().source)
     }
 
     @Test
-    fun delete_removesThePhotoToo() = runBlocking {
-        val id = library.add(mine("Shrugs"), PhotoChange.Replace(picked("a.jpg")))!!
-        val stored = dao.getById(id)!!.imageUri
+    fun delete_removesEveryPhoto() = runBlocking {
+        val id = library.add(mine("Shrugs"), picks("a.jpg", "b.jpg"))!!
+        val stored = dao.getById(id)!!.photos
 
         library.delete(dao.getById(id)!!)
 
-        assertFalse(exists(stored))
+        assertTrue(stored.none(::exists))
     }
 
     @Test
-    fun resetToOriginal_removesTheUsersPhoto() = runBlocking {
-        library.save(builtIn(), PhotoChange.Replace(picked("a.jpg")))
-        val stored = builtIn().imageUri
-        assertNotNull(stored)
+    fun resetToOriginal_removesTheUsersPhotos() = runBlocking {
+        library.save(builtIn(), picks("a.jpg", "b.jpg"))
+        val stored = builtIn().photos
+        assertEquals(2, stored.size)
 
         library.resetToOriginal(builtIn())
 
-        assertNull(builtIn().imageUri)
-        assertFalse(exists(stored))
+        assertEquals(emptyList<String>(), builtIn().photos)
+        assertTrue(stored.none(::exists))
     }
 }

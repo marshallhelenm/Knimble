@@ -46,6 +46,8 @@ data class Exercise(
     val tag: String,
     val description: String,
     val tier: Tier,
+    // The stored photos, one URI per line; read and write them through [photos] and [withPhotos]. Kept in this
+    // single-photo column (a lone URI is a one-photo list) so adding more photos needed no migration.
     // Null shows the stand-in picture.
     val imageUri: String? = null,
     val source: ExerciseSource,
@@ -56,4 +58,14 @@ data class Exercise(
     val enabled: Boolean = true,
     val credits: List<Credit> = emptyList(),
     val areas: Set<BodyArea> = emptySet()
-)
+) {
+    /** In the order they were added; the first is the one shown in lists. */
+    val photos: List<String>
+        get() = imageUri?.lines()?.filter { it.isNotBlank() }.orEmpty()
+
+    fun withPhotos(photos: List<String>): Exercise = copy(imageUri = photos.joinToString("\n").ifEmpty { null })
+
+    companion object {
+        const val MAX_PHOTOS = 5
+    }
+}

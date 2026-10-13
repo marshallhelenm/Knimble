@@ -9,7 +9,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.marshallhelenm.knimble.data.local.KnimbleDatabase
 import io.github.marshallhelenm.knimble.exercises.ExerciseLibrary
-import io.github.marshallhelenm.knimble.exercises.PhotoChange
+import io.github.marshallhelenm.knimble.exercises.PhotoDraft
 import io.github.marshallhelenm.knimble.model.Exercise
 import io.github.marshallhelenm.knimble.model.ExerciseSource
 import kotlinx.coroutines.launch
@@ -25,7 +25,8 @@ class EditExerciseViewModel(application: Application) : AndroidViewModel(applica
     var loaded by mutableStateOf(false)
         private set
     var form by mutableStateOf(ExerciseForm())
-    var photo by mutableStateOf<PhotoChange>(PhotoChange.Keep)
+    /** In order; the first is the one shown in lists. */
+    var photos by mutableStateOf<List<PhotoDraft>>(emptyList())
         private set
 
     /** Errors only show after a save attempt, so a blank new form doesn't open covered in red. */
@@ -37,6 +38,7 @@ class EditExerciseViewModel(application: Application) : AndroidViewModel(applica
         private set
 
     private var startingForm = ExerciseForm()
+    private var startingPhotos = emptyList<PhotoDraft>()
 
     fun load(id: Long?) {
         if (loaded) return
@@ -49,6 +51,8 @@ class EditExerciseViewModel(application: Application) : AndroidViewModel(applica
                 original = it
                 form = ExerciseForm.from(it)
                 startingForm = form
+                photos = it.photos.map(PhotoDraft::Stored)
+                startingPhotos = photos
             }
             loaded = true
         }
@@ -57,25 +61,20 @@ class EditExerciseViewModel(application: Application) : AndroidViewModel(applica
     val canDelete get() = original?.source == ExerciseSource.USER
     val canReset get() = original?.source == ExerciseSource.EDITED
 
-    /** What the preview should show: the newly picked image, the stored photo, or nothing (the placeholder). */
-    val photoToShow: Uri?
-        get() = when (val change = photo) {
-            is PhotoChange.Replace -> change.source
-            PhotoChange.Remove -> null
-            PhotoChange.Keep -> original?.imageUri?.let(Uri::parse)
-        }
+    val photoSlotsLeft get() = Exercise.MAX_PHOTOS - photos.size
 
-    fun pickPhoto(uri: Uri) {
+    /** Adds picked images after the existing photos, ignoring any beyond the limit. */
+    fun addPhotos(picked: List<Uri>) {
         photoFailed = false
-        photo = PhotoChange.Replace(uri)
+        photos = (photos + picked.map(PhotoDraft::Picked)).take(Exercise.MAX_PHOTOS)
     }
 
-    fun removePhoto() {
+    fun removePhoto(index: Int) {
         photoFailed = false
-        photo = if (original?.imageUri == null) PhotoChange.Keep else PhotoChange.Remove
+        photos = photos.filterIndexed { i, _ -> i != index }
     }
 
-    fun hasUnsavedChanges() = form != startingForm || photo != PhotoChange.Keep
+    fun hasUnsavedChanges() = form != startingForm || photos != startingPhotos
 
     /** Calls [onSaved] with the exercise's id once it's stored. */
     fun save(onSaved: (Long) -> Unit) {
@@ -94,9 +93,9 @@ class EditExerciseViewModel(application: Application) : AndroidViewModel(applica
         viewModelScope.launch {
             val base = original
             val id = if (base == null) {
-                library.add(form.toExercise(null), photo)
+                library.add(form.toExercise(null), photos)
             } else {
-                base.id.takeIf { library.save(form.toExercise(base), photo) }
+                base.id.takeIf { library.save(form.toExercise(base), photos) }
             }
             busy = false
             if (id == null) photoFailed = true else onSaved(id)

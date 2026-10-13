@@ -8,7 +8,17 @@ import android.util.LruCache
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -17,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
@@ -32,6 +43,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import io.github.marshallhelenm.knimble.R
@@ -129,10 +141,50 @@ fun ExercisePicture(
     )
 }
 
-/** [large] for the break and detail screens; otherwise a thumbnail-sized decode. */
+/** The first photo, or the area placeholder. [large] for full-size views; otherwise a thumbnail. */
 @Composable
 fun ExerciseImage(exercise: Exercise, large: Boolean, modifier: Modifier = Modifier) {
-    ExercisePicture(exercise.imageUri?.toUri(), placeholderFor(exercise.areas), large, exercise.name, modifier)
+    ExercisePicture(exercise.photos.firstOrNull()?.toUri(), placeholderFor(exercise.areas), large, exercise.name, modifier)
+}
+
+/**
+ * Every photo, full size, swiped through with dots showing which one is up. With one photo or none it's just
+ * [ExerciseImage]. [maxHeight] bounds each picture, which keeps its own shape within it.
+ */
+@Composable
+fun ExercisePhotoCarousel(exercise: Exercise, maxHeight: Dp, modifier: Modifier = Modifier) {
+    val photos = exercise.photos
+    if (photos.size <= 1) {
+        ExerciseImage(exercise, large = true, modifier = modifier.heightIn(max = maxHeight))
+        return
+    }
+    val pager = rememberPagerState(pageCount = { photos.size })
+    Column(modifier, horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        HorizontalPager(state = pager, pageSpacing = 16.dp, modifier = Modifier.fillMaxWidth()) { page ->
+            Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                ExercisePicture(
+                    photo = photos[page].toUri(),
+                    placeholder = placeholderFor(exercise.areas),
+                    large = true,
+                    contentDescription = stringResource(R.string.photo_of, page + 1, photos.size, exercise.name),
+                    modifier = Modifier.heightIn(max = maxHeight)
+                )
+            }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            repeat(photos.size) { index ->
+                Box(
+                    Modifier
+                        .size(8.dp)
+                        .clip(CircleShape)
+                        .background(
+                            if (index == pager.currentPage) MaterialTheme.colorScheme.primary
+                            else MaterialTheme.colorScheme.outlineVariant
+                        )
+                )
+            }
+        }
+    }
 }
 
 fun BodyArea.label(): Int = when (this) {

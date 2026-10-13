@@ -3,7 +3,9 @@ package io.github.marshallhelenm.knimble.ui.exercises
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -11,11 +13,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -39,7 +42,9 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import io.github.marshallhelenm.knimble.R
+import io.github.marshallhelenm.knimble.exercises.PhotoDraft
 import io.github.marshallhelenm.knimble.model.BodyArea
 import io.github.marshallhelenm.knimble.model.Tier
 import io.github.marshallhelenm.knimble.ui.components.ExercisePicture
@@ -61,35 +66,75 @@ fun EditExerciseScreen(
     val form = viewModel.form
     val errors = if (viewModel.showErrors) form.errors() else emptySet()
     var confirm by rememberSaveable { mutableStateOf<Confirm?>(null) }
-    val pickPhoto = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        uri?.let(viewModel::pickPhoto)
+    // The multi-photo picker needs room for at least two, so the last free slot uses the single picker.
+    val pickSeveral = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickMultipleVisualMedia(maxOf(2, viewModel.photoSlotsLeft))
+    ) { uris -> if (uris.isNotEmpty()) viewModel.addPhotos(uris) }
+    val pickOne = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        uri?.let { viewModel.addPhotos(listOf(it)) }
     }
+    val imagesOnly = PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
 
     Column(
         modifier = modifier.verticalScroll(rememberScrollState()).padding(16.dp).fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            ExercisePicture(
-                photo = viewModel.photoToShow,
-                placeholder = placeholderFor(form.areas),
-                large = true,
-                contentDescription = stringResource(R.string.edit_photo),
-                modifier = Modifier.sizeIn(maxWidth = 140.dp, maxHeight = 140.dp)
-            )
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                OutlinedButton(onClick = {
-                    pickPhoto.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                }) { Text(stringResource(R.string.edit_choose_photo)) }
-                if (viewModel.photoToShow != null) {
-                    TextButton(onClick = viewModel::removePhoto) { Text(stringResource(R.string.edit_remove_photo)) }
-                } else {
+        if (viewModel.photos.isEmpty()) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                ExercisePicture(
+                    photo = null,
+                    placeholder = placeholderFor(form.areas),
+                    large = false,
+                    contentDescription = null,
+                    modifier = Modifier.size(96.dp)
+                )
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    OutlinedButton(onClick = { pickSeveral.launch(imagesOnly) }) { Text(stringResource(R.string.edit_add_photos)) }
                     Text(
                         stringResource(R.string.edit_photo_hint),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+            }
+        } else {
+            Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                viewModel.photos.forEachIndexed { index, draft ->
+                    Box {
+                        ExercisePicture(
+                            photo = when (draft) {
+                                is PhotoDraft.Stored -> draft.uri.toUri()
+                                is PhotoDraft.Picked -> draft.source
+                            },
+                            placeholder = placeholderFor(form.areas),
+                            large = false,
+                            contentDescription = null,
+                            modifier = Modifier.size(80.dp)
+                        )
+                        FilledTonalIconButton(
+                            onClick = { viewModel.removePhoto(index) },
+                            modifier = Modifier.align(Alignment.TopEnd).padding(2.dp).size(28.dp)
+                        ) {
+                            Icon(
+                                painterResource(R.drawable.ic_close),
+                                contentDescription = stringResource(R.string.edit_remove_photo, index + 1),
+                                modifier = Modifier.size(16.dp)
+                            )
+                        }
+                    }
+                }
+            }
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                if (viewModel.photoSlotsLeft > 0) {
+                    OutlinedButton(onClick = {
+                        if (viewModel.photoSlotsLeft == 1) pickOne.launch(imagesOnly) else pickSeveral.launch(imagesOnly)
+                    }) { Text(stringResource(R.string.edit_add_photos)) }
+                }
+                Text(
+                    stringResource(if (viewModel.photoSlotsLeft > 0) R.string.edit_photos_hint else R.string.edit_photos_full),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
         if (viewModel.photoFailed) {
