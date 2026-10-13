@@ -3,8 +3,8 @@ package io.github.marshallhelenm.knimble.ui.timer
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -53,7 +53,7 @@ fun BreakContent(
             )
             OutlinedButton(onClick = onChooseExercises) { Text(stringResource(R.string.break_choose_exercises)) }
         } else {
-            ExerciseImage(exercise, large = true, modifier = Modifier.fillMaxWidth(0.8f).aspectRatio(1f))
+            ExerciseImage(exercise, large = true, modifier = Modifier.heightIn(max = 420.dp))
             Text(
                 exercise.name,
                 fontFamily = TitleFontFamily,

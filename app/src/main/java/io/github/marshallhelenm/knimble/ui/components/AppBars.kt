@@ -2,6 +2,7 @@ package io.github.marshallhelenm.knimble.ui.components
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -24,7 +25,7 @@ enum class AppDestination(@param:StringRes val label: Int, @param:DrawableRes va
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppTopBar(title: String, onBack: (() -> Unit)?) {
+fun AppTopBar(title: String, onBack: (() -> Unit)?, actions: @Composable RowScope.() -> Unit = {}) {
     CenterAlignedTopAppBar(
         // A handwritten face reads small, so it goes well above the default 22sp.
         title = { Text(title, fontFamily = TitleFontFamily, fontSize = 30.sp) },
@@ -34,7 +35,8 @@ fun AppTopBar(title: String, onBack: (() -> Unit)?) {
                     Icon(painterResource(R.drawable.ic_arrow_back), contentDescription = stringResource(R.string.back))
                 }
             }
-        }
+        },
+        actions = actions
     )
 }
 

@@ -1,15 +1,21 @@
 package io.github.marshallhelenm.knimble.ui.components
 
+import android.content.ContentResolver
 import android.content.res.Resources
 import android.graphics.BitmapFactory
+import android.net.Uri
+import android.util.LruCache
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,14 +30,19 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import io.github.marshallhelenm.knimble.R
 import io.github.marshallhelenm.knimble.model.BodyArea
 import io.github.marshallhelenm.knimble.model.Exercise
 import io.github.marshallhelenm.knimble.model.Tier
 import io.github.marshallhelenm.knimble.ui.theme.Cocoa
 import io.github.marshallhelenm.knimble.ui.theme.color
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlin.math.min
 
 // The stand-in pictures are up to 2000px square; decoded at full size every row would hold ~16 MB. Each picture is
 // decoded once per size, scaled down, and shared by every exercise using it.
@@ -46,30 +57,82 @@ private object Placeholder {
     }
 }
 
-// Until exercises have their own pictures, the stand-in is chosen by the body area worked.
-@DrawableRes
+// Exercises without a photo of their own get a stand-in chosen by the body area worked.
 // Eyes comes first: eye exercises that also move the head are still mainly about the eyes.
-private fun placeholderFor(exercise: Exercise): Int = when {
-    BodyArea.EYES in exercise.areas -> R.drawable.eyes_placeholder
-    BodyArea.NECK_SHOULDERS in exercise.areas -> R.drawable.neck_placeholder
-    BodyArea.WHOLE_BODY in exercise.areas -> R.drawable.whole_body_placeholder
-    BodyArea.HIPS_LEGS in exercise.areas -> R.drawable.legs_placeholder
-    BodyArea.BACK in exercise.areas -> R.drawable.back_placeholder
+@DrawableRes
+fun placeholderFor(areas: Set<BodyArea>): Int = when {
+    BodyArea.EYES in areas -> R.drawable.eyes_placeholder
+    BodyArea.NECK_SHOULDERS in areas -> R.drawable.neck_placeholder
+    BodyArea.WHOLE_BODY in areas -> R.drawable.whole_body_placeholder
+    BodyArea.HIPS_LEGS in areas -> R.drawable.legs_placeholder
+    BodyArea.BACK in areas -> R.drawable.back_placeholder
     else -> R.drawable.stretch_placeholder
+}
+
+// Users' photos, decoded at about the size they're shown and kept for reuse. 24 MB holds a list's worth of
+// thumbnails plus a couple of full-size ones.
+private object Photos {
+    private val cache = object : LruCache<String, ImageBitmap>(24 * 1024 * 1024) {
+        override fun sizeOf(key: String, value: ImageBitmap) = value.width * value.height * 4
+    }
+
+    private fun key(uri: Uri, targetPx: Int) = "$targetPx@$uri"
+
+    fun cached(uri: Uri, targetPx: Int): ImageBitmap? = cache.get(key(uri, targetPx))
+
+    /** Null if the photo can't be read, e.g. it was deleted, or a picker grant has expired. */
+    fun load(resolver: ContentResolver, uri: Uri, targetPx: Int): ImageBitmap? {
+        cached(uri, targetPx)?.let { return it }
+        return try {
+            val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+            val stream = resolver.openInputStream(uri) ?: return null
+            stream.use { BitmapFactory.decodeStream(it, null, bounds) }
+            var sample = 1
+            while (min(bounds.outWidth, bounds.outHeight) / (sample * 2) >= targetPx) sample *= 2
+            val options = BitmapFactory.Options().apply { inSampleSize = sample }
+            val bitmap = resolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, options) } ?: return null
+            bitmap.asImageBitmap().also { cache.put(key(uri, targetPx), it) }
+        } catch (_: Exception) {
+            null
+        }
+    }
+}
+
+/**
+ * A photo if there is one, else the area placeholder. Photos load off the main thread; until then (or if the
+ * photo can't be read) the placeholder shows. [large] pictures show whole, at their own shape, as big as the
+ * [modifier] allows; give it a maximum size rather than a fixed width, or a tall photo can't shrink to fit.
+ * Thumbnails are cropped square so list rows line up.
+ */
+@Composable
+fun ExercisePicture(
+    photo: Uri?,
+    @DrawableRes placeholder: Int,
+    large: Boolean,
+    contentDescription: String?,
+    modifier: Modifier = Modifier
+) {
+    val resources = LocalResources.current
+    val resolver = LocalContext.current.contentResolver
+    val targetPx = if (large) 1000 else 200
+    val standIn = remember(placeholder, large) { Placeholder.get(resources, placeholder, if (large) 2 else 8) }
+    val loaded by produceState(photo?.let { Photos.cached(it, targetPx) }, photo, targetPx) {
+        value = photo?.let { Photos.cached(it, targetPx) ?: withContext(Dispatchers.IO) { Photos.load(resolver, it, targetPx) } }
+    }
+    val bitmap = loaded ?: standIn
+    Image(
+        bitmap = bitmap,
+        contentDescription = contentDescription,
+        contentScale = if (large) ContentScale.Fit else ContentScale.Crop,
+        modifier = (if (large) modifier.aspectRatio(bitmap.width.toFloat() / bitmap.height) else modifier)
+            .clip(RoundedCornerShape(if (large) 24.dp else 12.dp))
+    )
 }
 
 /** [large] for the break and detail screens; otherwise a thumbnail-sized decode. */
 @Composable
 fun ExerciseImage(exercise: Exercise, large: Boolean, modifier: Modifier = Modifier) {
-    val resources = LocalResources.current
-    val res = placeholderFor(exercise)
-    val bitmap = remember(res, large) { Placeholder.get(resources, res, if (large) 2 else 8) }
-    Image(
-        bitmap = bitmap,
-        contentDescription = exercise.name,
-        contentScale = ContentScale.Crop,
-        modifier = modifier.clip(RoundedCornerShape(if (large) 24.dp else 12.dp))
-    )
+    ExercisePicture(exercise.imageUri?.toUri(), placeholderFor(exercise.areas), large, exercise.name, modifier)
 }
 
 fun BodyArea.label(): Int = when (this) {
@@ -101,9 +164,13 @@ fun Tier.label(): Int = when (this) {
     Tier.LARGE -> R.string.tier_large
 }
 
-/** The tag on a pill in its tier's colour. Tier colours are all light, so the text stays dark in both themes. */
+/**
+ * The tag on a pill in its tier's colour. Tier colours are all light, so the text stays dark in both themes.
+ * Nothing for an empty tag, which the user's own exercises may have.
+ */
 @Composable
 fun TagPill(text: String, tier: Tier, modifier: Modifier = Modifier) {
+    if (text.isBlank()) return
     Text(
         text = text,
         style = MaterialTheme.typography.labelLarge,

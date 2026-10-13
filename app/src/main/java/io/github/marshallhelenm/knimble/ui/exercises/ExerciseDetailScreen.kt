@@ -3,8 +3,8 @@ package io.github.marshallhelenm.knimble.ui.exercises
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -38,7 +38,7 @@ fun ExerciseDetailScreen(exerciseId: Long, viewModel: ExercisesViewModel, modifi
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        ExerciseImage(current, large = true, modifier = Modifier.fillMaxWidth(0.8f).aspectRatio(1f))
+        ExerciseImage(current, large = true, modifier = Modifier.heightIn(max = 420.dp))
         Text(current.name, fontFamily = TitleFontFamily, fontSize = 36.sp, lineHeight = 44.sp, textAlign = TextAlign.Center)
         TagPill(current.tag, current.tier)
         TierAndAreas(current)
