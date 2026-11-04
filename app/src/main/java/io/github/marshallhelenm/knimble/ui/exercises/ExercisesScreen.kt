@@ -9,11 +9,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,11 +42,21 @@ import io.github.marshallhelenm.knimble.ui.components.label
 import io.github.marshallhelenm.knimble.ui.theme.color
 
 @Composable
-fun ExercisesScreen(viewModel: ExercisesViewModel, onOpen: (Exercise) -> Unit, modifier: Modifier = Modifier) {
+fun ExercisesScreen(
+    viewModel: ExercisesViewModel,
+    onOpen: (Exercise) -> Unit,
+    listState: LazyListState,
+    modifier: Modifier = Modifier
+) {
     val byTier by viewModel.byTier.collectAsStateWithLifecycle()
     val areas by viewModel.areas.collectAsStateWithLifecycle()
     val availableAreas by viewModel.availableAreas.collectAsStateWithLifecycle()
-    LazyColumn(modifier = modifier.fillMaxWidth()) {
+    // Bottom room so the last row's switch can scroll clear of the floating buttons.
+    LazyColumn(
+        state = listState,
+        contentPadding = PaddingValues(bottom = 88.dp),
+        modifier = modifier.fillMaxWidth()
+    ) {
         item {
             Text(
                 stringResource(R.string.exercises_hint),
@@ -62,7 +72,6 @@ fun ExercisesScreen(viewModel: ExercisesViewModel, onOpen: (Exercise) -> Unit, m
                 ExerciseRow(exercise, onOpen = { onOpen(exercise) }, onToggle = { viewModel.setEnabled(exercise, it) })
             }
         }
-        item { Spacer(Modifier.height(16.dp)) }
     }
 }
 
