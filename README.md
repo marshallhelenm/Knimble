@@ -5,6 +5,13 @@ reminds you to take a stretch break and gives you a random stretch to do. Kotlin
 
 <img src="docs/demo.gif" alt="Knimble demo: choosing a timer, the countdown, browsing exercises, and a stretch break" width="300">
 
+<p>
+  <img src="docs/screenshots/timer.png" alt="Timer setup: break length and which tiers of stretches" width="200">
+  <img src="docs/screenshots/break.png" alt="Stretch break screen showing a random exercise with its picture and instructions" width="200">
+  <img src="docs/screenshots/exercises.png" alt="Exercise index grouped by tier, with body-area filters and on/off switches" width="200">
+  <img src="docs/screenshots/editor.png" alt="Exercise editor with photos, name, tier and body areas" width="200">
+</p>
+
 ## What it does
 
 - **Timer:** pick how long until your break and which kinds of stretches you're up for: **Minor** (small
@@ -18,6 +25,8 @@ reminds you to take a stretch break and gives you a random stretch to do. Kotlin
 - **Exercise index:** every exercise, grouped by tier, filterable by body area (hands & wrists, neck &
   shoulders, back, hips & legs, eyes, whole body). Switch off any that don't work for you and breaks will
   never pick them.
+- **Your own exercises:** add new exercises or edit any existing one: name, a short tag, tier, body areas,
+  instructions, sources, and up to five photos.
 
 This is a personal project for me and friends, not medical advice. The exercises are gentle stretches adapted
 from public health sites and a doctor's exercise sheet. Go gently, and stop if anything hurts.
