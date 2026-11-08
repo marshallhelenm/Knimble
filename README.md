@@ -3,8 +3,6 @@
 A timer for crafters. Start it when you sit down to knit, crochet, sew or draw, and when it ends Knimble
 reminds you to take a stretch break and gives you a random stretch to do. Kotlin + Jetpack Compose.
 
-<img src="docs/demo.gif" alt="Knimble demo: choosing a timer, the countdown, browsing exercises, and a stretch break" width="300">
-
 <p>
   <img src="docs/screenshots/timer.png" alt="Timer setup: break length and which tiers of stretches" width="200">
   <img src="docs/screenshots/break.png" alt="Stretch break screen showing a random exercise with its picture and instructions" width="200">
